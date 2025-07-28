@@ -22,10 +22,10 @@ app.use(express.json());
 
 // MySQL Connection
 const mysqlConfig = process.env.MYSQL_URL || process.env.MYSQL_PUBLIC_URL || {
-  host: process.env.MYSQLHOST || process.env.MYSQL_HOST || process.env.DB_HOST || 'localhost',
+  host: process.env.MYSQLHOST || process.env.MYSQL_HOST || process.env.DB_HOST || 'mysql.railway.internal',
   user: process.env.MYSQLUSER || process.env.MYSQL_USER || process.env.DB_USER || 'root',
   password: process.env.MYSQLPASSWORD || process.env.MYSQL_PASSWORD || process.env.DB_PASSWORD || '',
-  database: process.env.MYSQLDATABASE || process.env.MYSQL_DATABASE || process.env.DB_NAME || 'fourai',
+  database: process.env.MYSQLDATABASE || process.env.MYSQL_DATABASE || process.env.DB_NAME || 'four-ai',
   port: process.env.MYSQLPORT || 3306
 };
 
