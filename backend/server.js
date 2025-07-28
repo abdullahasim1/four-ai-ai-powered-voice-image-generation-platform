@@ -10,6 +10,7 @@ const PORT = process.env.PORT || 5001;
 const allowedOrigins = [
   'https://four-ai-dev.vercel.app',
   'https://four-ai.vercel.app',
+  'https://your-frontend-url.vercel.app', // Add your actual frontend URL here
   'http://localhost:5173',
   'http://localhost:3000'
 ];
@@ -20,19 +21,37 @@ app.use(cors({
 app.use(express.json());
 
 // MySQL Connection
-const db = mysql.createConnection(
-  process.env.MYSQL_URL || {
-    host: process.env.DB_HOST,
-    user: process.env.DB_USER,
-    password: process.env.DB_PASSWORD,
-    database: process.env.DB_NAME
-  }
-);
+const mysqlConfig = process.env.MYSQL_URL || {
+  host: process.env.MYSQL_HOST || process.env.DB_HOST || 'localhost',
+  user: process.env.MYSQL_USER || process.env.DB_USER || 'root',
+  password: process.env.MYSQL_PASSWORD || process.env.DB_PASSWORD || '',
+  database: process.env.MYSQL_DATABASE || process.env.DB_NAME || 'fourai'
+};
+
+console.log('MySQL Config:', {
+  host: mysqlConfig.host,
+  user: mysqlConfig.user,
+  database: mysqlConfig.database,
+  hasPassword: !!mysqlConfig.password
+});
+
+const db = mysql.createConnection(mysqlConfig);
 
 // Connect to MySQL
 db.connect((err) => {
   if (err) {
     console.error('Error connecting to MySQL:', err);
+    console.error('Environment variables available:', {
+      MYSQL_URL: !!process.env.MYSQL_URL,
+      MYSQL_HOST: !!process.env.MYSQL_HOST,
+      MYSQL_USER: !!process.env.MYSQL_USER,
+      MYSQL_PASSWORD: !!process.env.MYSQL_PASSWORD,
+      MYSQL_DATABASE: !!process.env.MYSQL_DATABASE,
+      DB_HOST: !!process.env.DB_HOST,
+      DB_USER: !!process.env.DB_USER,
+      DB_PASSWORD: !!process.env.DB_PASSWORD,
+      DB_NAME: !!process.env.DB_NAME
+    });
     return;
   }
   console.log('Connected to MySQL database');
