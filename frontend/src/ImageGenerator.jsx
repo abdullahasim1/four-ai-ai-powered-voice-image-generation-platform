@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
 import Api from "./api";
-import FloatingIcons from "./components/FloatingIcons";
+import { FaImage, FaMagic, FaPalette, FaCamera, FaStar, FaMoon, FaSun, FaMountain, FaTree, FaCloud, FaHeart } from "react-icons/fa";
 
 const ImageGen = () => {
   const [prompt, setPrompt] = useState("");
@@ -11,7 +11,19 @@ const ImageGen = () => {
   const [numInferenceSteps, setNumInferenceSteps] = useState(28);
   const [guidanceScale, setGuidanceScale] = useState(3.5);
 
-
+  const floatingIcons = [
+    { icon: <FaImage />, color: "text-purple-400" },
+    { icon: <FaMagic />, color: "text-pink-400" },
+    { icon: <FaPalette />, color: "text-blue-400" },
+    { icon: <FaCamera />, color: "text-green-400" },
+    { icon: <FaStar />, color: "text-yellow-400" },
+    { icon: <FaMoon />, color: "text-indigo-400" },
+    { icon: <FaSun />, color: "text-orange-400" },
+    { icon: <FaMountain />, color: "text-teal-400" },
+    { icon: <FaTree />, color: "text-emerald-400" },
+    { icon: <FaCloud />, color: "text-sky-400" },
+    { icon: <FaHeart />, color: "text-red-400" }
+  ];
 
   const generateImage = async () => {
     if (!prompt.trim()) return alert("Please enter a prompt!");
@@ -60,7 +72,33 @@ const ImageGen = () => {
   return (
     <div className="min-h-screen relative overflow-hidden bg-gradient-to-br from-indigo-900 via-purple-900 to-pink-900">
       {/* Floating Icons Background */}
-      <FloatingIcons theme="default" />
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        {floatingIcons.map((item, index) => (
+          <motion.div
+            key={index}
+            className={`absolute ${item.color} text-4xl opacity-20`}
+            initial={{ 
+              x: Math.random() * window.innerWidth,
+              y: Math.random() * window.innerHeight,
+              scale: 0.5 + Math.random() * 0.5,
+              rotate: Math.random() * 360
+            }}
+            animate={{
+              y: ["0%", "-50%", "0%"],
+              x: ["0%", "50%", "0%"],
+              rotate: [0, 360, 0],
+              scale: [1, 1.2, 1]
+            }}
+            transition={{
+              duration: 15 + Math.random() * 10,
+              repeat: Infinity,
+              ease: "linear"
+            }}
+          >
+            {item.icon}
+          </motion.div>
+        ))}
+      </div>
 
       {/* Main Content */}
       <div className="relative z-10 flex flex-col items-center justify-center min-h-screen px-4 py-6">

@@ -2,7 +2,6 @@ import React, { useState, useEffect, useRef } from "react";
 import { motion } from "framer-motion";
 import { FaEnvelope, FaLock, FaUser } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
-import FloatingIcons from "./components/FloatingIcons";
 import { createFloatingIcons, cleanupAnimations } from "./animations/signupAnimations";
 import {
   createMainIconsAnimation,
@@ -105,7 +104,6 @@ const SignupPage = () => {
         backgroundSize: "200% 200%",
       }}
     >
-      <FloatingIcons theme="social" />
       <div ref={containerRef} className="absolute inset-0 overflow-hidden">
         {/* Background icons will be rendered here */}
       </div>
