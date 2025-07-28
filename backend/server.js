@@ -22,10 +22,11 @@ app.use(express.json());
 
 // MySQL Connection
 const mysqlConfig = process.env.MYSQL_URL || {
-  host: process.env.MYSQL_HOST || process.env.DB_HOST || 'localhost',
-  user: process.env.MYSQL_USER || process.env.DB_USER || 'root',
-  password: process.env.MYSQL_PASSWORD || process.env.DB_PASSWORD || '',
-  database: process.env.MYSQL_DATABASE || process.env.DB_NAME || 'fourai'
+  host: process.env.MYSQLHOST || process.env.MYSQL_HOST || process.env.DB_HOST || 'localhost',
+  user: process.env.MYSQLUSER || process.env.MYSQL_USER || process.env.DB_USER || 'root',
+  password: process.env.MYSQLPASSWORD || process.env.MYSQL_PASSWORD || process.env.DB_PASSWORD || '',
+  database: process.env.MYSQLDATABASE || process.env.MYSQL_DATABASE || process.env.DB_NAME || 'fourai',
+  port: process.env.MYSQLPORT || 3306
 };
 
 console.log('MySQL Config:', {
