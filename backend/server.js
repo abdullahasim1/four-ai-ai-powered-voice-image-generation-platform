@@ -4,46 +4,36 @@ const mysql = require('mysql2');
 require('dotenv').config();
 
 const app = express();
-const PORT = process.env.PORT || 5001;
+const PORT = process.env.PORT || 8080;
 
-// Middleware
+// Allowed frontend URLs
 const allowedOrigins = [
   'https://four-ai-dev.vercel.app',
   'https://four-ai.vercel.app',
-  'https://your-frontend-url.vercel.app', // Add your actual frontend URL here
   'http://localhost:5173',
   'http://localhost:3000'
 ];
+
+// Middleware
 app.use(cors({
   origin: allowedOrigins,
   credentials: true
 }));
 app.use(express.json());
 
-// MySQL Connection
-const mysqlConfig = process.env.MYSQL_URL || process.env.MYSQL_PUBLIC_URL || {
-  host: process.env.MYSQLHOST || process.env.MYSQL_HOST || process.env.DB_HOST || 'mysql.railway.internal',
-  user: process.env.MYSQLUSER || process.env.MYSQL_USER || process.env.DB_USER || 'root',
-  password: process.env.MYSQLPASSWORD || process.env.MYSQL_PASSWORD || process.env.DB_PASSWORD || '',
-  database: process.env.MYSQLDATABASE || process.env.MYSQL_DATABASE || process.env.DB_NAME || 'four-ai',
-  port: process.env.MYSQLPORT || 3306
+// MySQL Connection using Railway-style env variables
+const mysqlConfig = {
+  host: process.env.MYSQL_HOST,
+  user: process.env.MYSQL_USER,
+  password: process.env.MYSQL_PASSWORD,
+  database: process.env.MYSQL_DATABASE,
+  port: process.env.MYSQL_PORT || 3306
 };
 
-console.log('MySQL Config:', {
+console.log('Connecting to MySQL with:', {
   host: mysqlConfig.host,
   user: mysqlConfig.user,
-  database: mysqlConfig.database,
-  hasPassword: !!mysqlConfig.password
-});
-
-console.log('Available Environment Variables:', {
-  MYSQL_URL: !!process.env.MYSQL_URL,
-  MYSQL_PUBLIC_URL: !!process.env.MYSQL_PUBLIC_URL,
-  MYSQLHOST: !!process.env.MYSQLHOST,
-  MYSQLUSER: !!process.env.MYSQLUSER,
-  MYSQLPASSWORD: !!process.env.MYSQLPASSWORD,
-  MYSQLDATABASE: !!process.env.MYSQLDATABASE,
-  MYSQLPORT: !!process.env.MYSQLPORT
+  database: mysqlConfig.database
 });
 
 const db = mysql.createConnection(mysqlConfig);
@@ -51,23 +41,12 @@ const db = mysql.createConnection(mysqlConfig);
 // Connect to MySQL
 db.connect((err) => {
   if (err) {
-    console.error('Error connecting to MySQL:', err);
-    console.error('Environment variables available:', {
-      MYSQL_URL: !!process.env.MYSQL_URL,
-      MYSQL_HOST: !!process.env.MYSQL_HOST,
-      MYSQL_USER: !!process.env.MYSQL_USER,
-      MYSQL_PASSWORD: !!process.env.MYSQL_PASSWORD,
-      MYSQL_DATABASE: !!process.env.MYSQL_DATABASE,
-      DB_HOST: !!process.env.DB_HOST,
-      DB_USER: !!process.env.DB_USER,
-      DB_PASSWORD: !!process.env.DB_PASSWORD,
-      DB_NAME: !!process.env.DB_NAME
-    });
+    console.error('❌ MySQL connection failed:', err);
     return;
   }
-  console.log('Connected to MySQL database');
-  
-  // Create users table if it doesn't exist
+  console.log('✅ Connected to MySQL database');
+
+  // Create users table
   const createTableQuery = `
     CREATE TABLE IF NOT EXISTS users (
       id INT AUTO_INCREMENT PRIMARY KEY,
@@ -77,12 +56,11 @@ db.connect((err) => {
       created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     )
   `;
-  
   db.query(createTableQuery, (err) => {
     if (err) {
-      console.error('Error creating users table:', err);
+      console.error('❌ Failed to create users table:', err);
     } else {
-      console.log('Users table created or already exists');
+      console.log('✅ Users table is ready');
     }
   });
 });
@@ -92,13 +70,11 @@ app.post('/api/signup', async (req, res) => {
   const { name, email, password } = req.body;
 
   try {
-    // Check if user already exists
     const [existingUsers] = await db.promise().query('SELECT * FROM users WHERE email = ?', [email]);
     if (existingUsers.length > 0) {
       return res.status(400).json({ success: false, message: 'Email already exists' });
     }
 
-    // Insert new user
     const [result] = await db.promise().query(
       'INSERT INTO users (name, email, password) VALUES (?, ?, ?)',
       [name, email, password]
@@ -110,7 +86,7 @@ app.post('/api/signup', async (req, res) => {
       userId: result.insertId
     });
   } catch (error) {
-    console.error('Signup error:', error);
+    console.error('❌ Signup error:', error);
     res.status(500).json({ success: false, message: 'Error creating user' });
   }
 });
@@ -120,12 +96,11 @@ app.post('/api/login', async (req, res) => {
   const { email, password } = req.body;
 
   try {
-    // Find user by email and password
     const [users] = await db.promise().query(
       'SELECT * FROM users WHERE email = ? AND password = ?',
       [email, password]
     );
-    
+
     if (users.length === 0) {
       return res.status(401).json({ success: false, message: 'Invalid credentials' });
     }
@@ -141,7 +116,7 @@ app.post('/api/login', async (req, res) => {
       }
     });
   } catch (error) {
-    console.error('Login error:', error);
+    console.error('❌ Login error:', error);
     res.status(500).json({ success: false, message: 'Error during login' });
   }
 });
@@ -153,7 +128,6 @@ app.post('/api/forgot-password', async (req, res) => {
     return res.status(400).json({ success: false, message: 'Email and new password are required.' });
   }
   try {
-    // Update the user's password in the database
     const [result] = await db.promise().query(
       'UPDATE users SET password = ? WHERE email = ?',
       [newPassword, email]
@@ -163,12 +137,12 @@ app.post('/api/forgot-password', async (req, res) => {
     }
     res.json({ success: true, message: 'Password updated successfully.' });
   } catch (error) {
-    console.error('Forgot password error:', error);
+    console.error('❌ Forgot password error:', error);
     res.status(500).json({ success: false, message: 'Error updating password.' });
   }
 });
 
 // Start server
 app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-}); 
+  console.log(`🚀 Server running on port ${PORT}`);
+});
