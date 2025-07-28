@@ -3,6 +3,7 @@ import { IoMdArrowDropdown } from "react-icons/io";
 import { FaPlay, FaPause, FaMicrophone, FaImage, FaMagic, FaVolumeUp, FaGlobe, FaBook, FaHeadphones, FaVideo } from "react-icons/fa";
 import { BsMic, BsCameraVideo } from "react-icons/bs";
 import { useNavigate } from "react-router-dom";
+import FloatingIcons from "./components/FloatingIcons";
 
 const VoiceGenerator = () => {
   const navigate = useNavigate();
@@ -84,7 +85,8 @@ const VoiceGenerator = () => {
   ];
 
   return (
-    <div className="container mx-auto mt-10 px-4">
+    <div className="container mx-auto mt-10 px-4 relative overflow-hidden">
+      <FloatingIcons theme="voice" />
       {/* Tools Grid */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
         {tools.map((tool, index) => (

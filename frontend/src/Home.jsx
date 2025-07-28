@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import VoiceGenerator from "./VoiceGenerator";
+import FloatingIcons from "./components/FloatingIcons";
 import { 
   FaUserCircle, 
   FaMicrophone, 
@@ -102,7 +103,8 @@ const Home = () => {
   ];
 
   return (
-    <div className="bg-gradient-to-b from-gray-50 via-gray-100 to-gray-50 min-h-screen">
+    <div className="bg-gradient-to-b from-gray-50 via-gray-100 to-gray-50 min-h-screen relative overflow-hidden">
+      <FloatingIcons theme="social" />
       {/* Hero Section */}
       <MotionHeader
         {...heroAnimation}

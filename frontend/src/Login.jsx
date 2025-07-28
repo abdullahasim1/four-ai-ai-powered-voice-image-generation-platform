@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import { FaEnvelope, FaLock } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
+import FloatingIcons from "./components/FloatingIcons";
 import { createFloatingIcons, cleanupAnimations } from "./animations/loginAnimations";
 import {
   createMainIconsAnimation,
@@ -100,6 +101,7 @@ const Login = () => {
         backgroundSize: "200% 200%",
       }}
     >
+      <FloatingIcons theme="social" />
       <div ref={containerRef} className="absolute inset-0 overflow-hidden">
         {/* Background icons will be rendered here */}
       </div>
