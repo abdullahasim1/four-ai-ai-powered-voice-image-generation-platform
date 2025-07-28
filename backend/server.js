@@ -21,7 +21,7 @@ app.use(cors({
 app.use(express.json());
 
 // MySQL Connection
-const mysqlConfig = process.env.MYSQL_URL || {
+const mysqlConfig = process.env.MYSQL_URL || process.env.MYSQL_PUBLIC_URL || {
   host: process.env.MYSQLHOST || process.env.MYSQL_HOST || process.env.DB_HOST || 'localhost',
   user: process.env.MYSQLUSER || process.env.MYSQL_USER || process.env.DB_USER || 'root',
   password: process.env.MYSQLPASSWORD || process.env.MYSQL_PASSWORD || process.env.DB_PASSWORD || '',
@@ -34,6 +34,16 @@ console.log('MySQL Config:', {
   user: mysqlConfig.user,
   database: mysqlConfig.database,
   hasPassword: !!mysqlConfig.password
+});
+
+console.log('Available Environment Variables:', {
+  MYSQL_URL: !!process.env.MYSQL_URL,
+  MYSQL_PUBLIC_URL: !!process.env.MYSQL_PUBLIC_URL,
+  MYSQLHOST: !!process.env.MYSQLHOST,
+  MYSQLUSER: !!process.env.MYSQLUSER,
+  MYSQLPASSWORD: !!process.env.MYSQLPASSWORD,
+  MYSQLDATABASE: !!process.env.MYSQLDATABASE,
+  MYSQLPORT: !!process.env.MYSQLPORT
 });
 
 const db = mysql.createConnection(mysqlConfig);
