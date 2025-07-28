@@ -21,14 +21,23 @@ app.use(cors({
 }));
 app.use(express.json());
 
-// MySQL Connection using Railway-style env variables
+// MySQL Connection
 const mysqlConfig = {
   host: process.env.MYSQL_HOST,
   user: process.env.MYSQL_USER,
   password: process.env.MYSQL_PASSWORD,
-  database: process.env.MYSQL_DATABASE,
-  port: process.env.MYSQL_PORT || 3306
+  database: process.env.MYSQL_DATABASE
+  
 };
+
+// Debug .env values
+console.log('✅ ENV Check:', {
+  MYSQL_HOST: process.env.MYSQL_HOST,
+  MYSQL_USER: process.env.MYSQL_USER,
+  MYSQL_PASSWORD: !!process.env.MYSQL_PASSWORD ? '✅ set' : '❌ missing',
+  MYSQL_DATABASE: process.env.MYSQL_DATABASE
+  
+});
 
 console.log('Connecting to MySQL with:', {
   host: mysqlConfig.host,
@@ -38,7 +47,7 @@ console.log('Connecting to MySQL with:', {
 
 const db = mysql.createConnection(mysqlConfig);
 
-// Connect to MySQL
+// MySQL connection
 db.connect((err) => {
   if (err) {
     console.error('❌ MySQL connection failed:', err);
@@ -46,7 +55,6 @@ db.connect((err) => {
   }
   console.log('✅ Connected to MySQL database');
 
-  // Create users table
   const createTableQuery = `
     CREATE TABLE IF NOT EXISTS users (
       id INT AUTO_INCREMENT PRIMARY KEY,
@@ -63,6 +71,11 @@ db.connect((err) => {
       console.log('✅ Users table is ready');
     }
   });
+});
+
+// Root route
+app.get('/', (req, res) => {
+  res.send('✅ Four-AI backend is running');
 });
 
 // Signup endpoint
