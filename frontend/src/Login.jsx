@@ -13,7 +13,7 @@ import {
   cleanupAllAnimations
 } from "./animations/motionAnimations";
 
-const API_URL = 'http://localhost:5001/api';
+const API_URL = 'https://four-ai-9eat.vercel.app/api/login';
 
 const Login = () => {
   const [email, setEmail] = useState("");

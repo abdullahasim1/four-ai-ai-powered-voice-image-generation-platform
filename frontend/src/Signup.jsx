@@ -65,7 +65,7 @@ const SignupPage = () => {
 
     setLoading(true);
     try {
-      const res = await axios.post('http://localhost:5001/api/signup', {
+      const res = await axios.post('https://four-ai-9eat.vercel.app/api/signup', {
         name: username,
         email,
         password
