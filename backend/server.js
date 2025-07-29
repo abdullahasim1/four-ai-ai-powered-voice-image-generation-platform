@@ -35,26 +35,27 @@ app.use(express.json());
 
 // MySQL Connection
 const mysqlConfig = {
-  host: process.env.MYSQL_HOST || process.env.DB_HOST,
-  user: process.env.MYSQL_USER || process.env.DB_USER,
-  password: process.env.MYSQL_PASSWORD || process.env.DB_PASSWORD,
-  database: process.env.MYSQL_DATABASE || process.env.DB_NAME,
-  port: process.env.MYSQL_PORT || process.env.DB_PORT || 3306
+  host: process.env.MYSQL_ADDON_HOST || process.env.MYSQL_HOST || process.env.DB_HOST,
+  user: process.env.MYSQL_ADDON_USER || process.env.MYSQL_USER || process.env.DB_USER,
+  password: process.env.MYSQL_ADDON_PASSWORD || process.env.MYSQL_PASSWORD || process.env.DB_PASSWORD,
+  database: process.env.MYSQL_ADDON_DB || process.env.MYSQL_DATABASE || process.env.DB_NAME,
+  port: process.env.MYSQL_ADDON_PORT || process.env.MYSQL_PORT || process.env.DB_PORT || 3306
 };
 
 // Debug .env values
 console.log('✅ ENV Check:', {
-  MYSQL_HOST: process.env.MYSQL_HOST,
-  MYSQL_USER: process.env.MYSQL_USER,
-  MYSQL_PASSWORD: !!process.env.MYSQL_PASSWORD ? '✅ set' : '❌ missing',
-  MYSQL_DATABASE: process.env.MYSQL_DATABASE
-  
+  MYSQL_ADDON_HOST: process.env.MYSQL_ADDON_HOST,
+  MYSQL_ADDON_USER: process.env.MYSQL_ADDON_USER,
+  MYSQL_ADDON_PASSWORD: !!process.env.MYSQL_ADDON_PASSWORD ? '✅ set' : '❌ missing',
+  MYSQL_ADDON_DB: process.env.MYSQL_ADDON_DB,
+  MYSQL_ADDON_PORT: process.env.MYSQL_ADDON_PORT
 });
 
 console.log('Connecting to MySQL with:', {
   host: mysqlConfig.host,
   user: mysqlConfig.user,
-  database: mysqlConfig.database
+  database: mysqlConfig.database,
+  port: mysqlConfig.port
 });
 
 const db = mysql.createConnection(mysqlConfig);
