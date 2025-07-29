@@ -80,6 +80,9 @@ app.get('/', (req, res) => {
   res.send('✅ Four-AI backend is running');
 });
 
+// Handle CORS preflight requests
+app.options('*', cors());
+
 // Signup endpoint
 app.post('/api/signup', async (req, res) => {
   const { name, email, password } = req.body;
