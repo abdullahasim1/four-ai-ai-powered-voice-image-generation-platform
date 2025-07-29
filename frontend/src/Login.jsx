@@ -12,8 +12,7 @@ import {
   createGradientAnimation,
   cleanupAllAnimations
 } from "./animations/motionAnimations";
-
-const API_URL = 'https://four-ai-9eat.vercel.app/api/login';
+import API_BASE_URL from './api';
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -60,32 +59,19 @@ const Login = () => {
     setLoading(true);
 
     try {
-      const res = await axios.post('http://localhost:5001/api/login', {
+      const res = await axios.post(`${API_BASE_URL}/login`, {
         email,
-        password
+        password,
       });
-
       if (res.data.success) {
-        // Store user data
-        localStorage.setItem("userData", JSON.stringify(res.data.user));
-        localStorage.setItem("loggedIn", "true");
-        
-        if (rememberMe) {
-          localStorage.setItem("rememberMe", "true");
-        }
-
-        // Navigate to home page
-        navigate("/home");
+        setSuccess(true);
+        setError('');
+        // Optionally redirect or show success message
       } else {
-        setError(res.data.message || "Login failed!");
+        setError(res.data.message || 'Login failed');
       }
     } catch (err) {
-      console.error('Login error:', err);
-      if (err.code === 'ERR_NETWORK') {
-        setError("Cannot connect to server. Please try again later.");
-      } else {
-        setError(err.response?.data?.message || "Invalid email or password");
-      }
+      setError(err.response?.data?.message || 'Login failed');
     } finally {
       setLoading(false);
     }

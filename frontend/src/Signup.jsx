@@ -12,6 +12,7 @@ import {
   cleanupAllAnimations
 } from "./animations/signupMotionAnimations";
 import axios from "axios";
+import API_BASE_URL from './api';
 
 const SignupPage = () => {
   const [username, setUsername] = useState('');
@@ -65,12 +66,11 @@ const SignupPage = () => {
 
     setLoading(true);
     try {
-      const res = await axios.post('https://four-ai-9eat.vercel.app/api/signup', {
+      const res = await axios.post(`${API_BASE_URL}/signup`, {
         name: username,
         email,
-        password
+        password,
       });
-
       if (res.data.success) {
         setMessage('Account created successfully!');
         setError('');
