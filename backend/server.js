@@ -10,6 +10,8 @@ const PORT = process.env.PORT || 8080;
 const allowedOrigins = [
   'https://four-ai-dev.vercel.app',
   'https://four-ai.vercel.app',
+  'https://four-ai-frontend.vercel.app',
+  'https://four-ai-frontend-git-main-abdullahasim1.vercel.app',
   'http://localhost:5173',
   'http://localhost:3000'
 ];
@@ -23,11 +25,11 @@ app.use(express.json());
 
 // MySQL Connection
 const mysqlConfig = {
-  host: process.env.MYSQL_HOST,
-  user: process.env.MYSQL_USER,
-  password: process.env.MYSQL_PASSWORD,
-  database: process.env.MYSQL_DATABASE
-  
+  host: process.env.MYSQL_HOST || process.env.DB_HOST,
+  user: process.env.MYSQL_USER || process.env.DB_USER,
+  password: process.env.MYSQL_PASSWORD || process.env.DB_PASSWORD,
+  database: process.env.MYSQL_DATABASE || process.env.DB_NAME,
+  port: process.env.MYSQL_PORT || process.env.DB_PORT || 3306
 };
 
 // Debug .env values
