@@ -96,7 +96,7 @@ const Navbar = () => {
             className="h-4 w-auto"
             onError={(e) => {
               e.target.onerror = null;
-              e.target.src = '';
+              e.target.src = 'logo.png';
             }}
           />
         </Link>
