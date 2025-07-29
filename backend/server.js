@@ -18,8 +18,18 @@ const allowedOrigins = [
 
 // Middleware
 app.use(cors({
-  origin: allowedOrigins,
-  credentials: true
+  origin: function (origin, callback) {
+    // Allow requests with no origin (like mobile apps or curl requests)
+    if (!origin) return callback(null, true);
+    if (allowedOrigins.indexOf(origin) !== -1) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With']
 }));
 app.use(express.json());
 
@@ -80,11 +90,21 @@ app.get('/', (req, res) => {
   res.send('✅ Four-AI backend is running');
 });
 
+// Test endpoint for CORS
+app.get('/api/test', (req, res) => {
+  res.json({ message: 'Backend is working!', timestamp: new Date().toISOString() });
+});
+
 // Handle CORS preflight requests
 app.options('*', cors());
 
 // Signup endpoint
 app.post('/api/signup', async (req, res) => {
+  // Set CORS headers explicitly
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With');
+  
   const { name, email, password } = req.body;
 
   try {
