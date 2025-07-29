@@ -33,13 +33,18 @@ app.use(cors({
 }));
 app.use(express.json());
 
-// MySQL Connection
+// MySQL Connection Pool (better for serverless)
 const mysqlConfig = {
   host: process.env.MYSQL_ADDON_HOST || process.env.MYSQL_HOST || process.env.DB_HOST,
   user: process.env.MYSQL_ADDON_USER || process.env.MYSQL_USER || process.env.DB_USER,
   password: process.env.MYSQL_ADDON_PASSWORD || process.env.MYSQL_PASSWORD || process.env.DB_PASSWORD,
   database: process.env.MYSQL_ADDON_DB || process.env.MYSQL_DATABASE || process.env.DB_NAME,
-  port: process.env.MYSQL_ADDON_PORT || process.env.MYSQL_PORT || process.env.DB_PORT || 3306
+  port: process.env.MYSQL_ADDON_PORT || process.env.MYSQL_PORT || process.env.DB_PORT || 3306,
+  // Connection pool settings for serverless
+  connectionLimit: 10,
+  acquireTimeout: 60000,
+  timeout: 60000,
+  reconnect: true
 };
 
 // Debug .env values
@@ -58,16 +63,18 @@ console.log('Connecting to MySQL with:', {
   port: mysqlConfig.port
 });
 
-const db = mysql.createConnection(mysqlConfig);
+// Create connection pool
+const pool = mysql.createPool(mysqlConfig);
 
-// MySQL connection
-db.connect((err) => {
+// Test pool connection
+pool.getConnection((err, connection) => {
   if (err) {
-    console.error('❌ MySQL connection failed:', err);
+    console.error('❌ MySQL pool connection failed:', err);
     return;
   }
-  console.log('✅ Connected to MySQL database');
-
+  console.log('✅ MySQL pool connected successfully');
+  
+  // Create users table
   const createTableQuery = `
     CREATE TABLE IF NOT EXISTS users (
       id INT AUTO_INCREMENT PRIMARY KEY,
@@ -77,12 +84,14 @@ db.connect((err) => {
       created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     )
   `;
-  db.query(createTableQuery, (err) => {
+  
+  connection.query(createTableQuery, (err) => {
     if (err) {
       console.error('❌ Failed to create users table:', err);
     } else {
       console.log('✅ Users table is ready');
     }
+    connection.release();
   });
 });
 
@@ -99,11 +108,11 @@ app.get('/api/test', (req, res) => {
 // Database health check endpoint
 app.get('/api/db-test', async (req, res) => {
   try {
-    const [result] = await db.promise().query('SELECT 1 as test');
+    const [result] = await pool.promise().query('SELECT 1 as test');
     res.json({ 
       success: true, 
       message: 'Database connection working!',
-      dbState: db.state,
+      dbState: 'connected', // Indicate connection status
       test: result[0]
     });
   } catch (error) {
@@ -111,7 +120,7 @@ app.get('/api/db-test', async (req, res) => {
       success: false, 
       message: 'Database connection failed',
       error: error.message,
-      dbState: db.state
+      dbState: 'disconnected'
     });
   }
 });
@@ -128,22 +137,13 @@ app.post('/api/signup', async (req, res) => {
   
   const { name, email, password } = req.body;
 
-  // Check if database is connected
-  if (db.state === 'disconnected') {
-    console.error('❌ Database not connected');
-    return res.status(500).json({ 
-      success: false, 
-      message: 'Database connection error. Please check environment variables.' 
-    });
-  }
-
   try {
-    const [existingUsers] = await db.promise().query('SELECT * FROM users WHERE email = ?', [email]);
+    const [existingUsers] = await pool.promise().query('SELECT * FROM users WHERE email = ?', [email]);
     if (existingUsers.length > 0) {
       return res.status(400).json({ success: false, message: 'Email already exists' });
     }
 
-    const [result] = await db.promise().query(
+    const [result] = await pool.promise().query(
       'INSERT INTO users (name, email, password) VALUES (?, ?, ?)',
       [name, email, password]
     );
@@ -168,7 +168,7 @@ app.post('/api/login', async (req, res) => {
   const { email, password } = req.body;
 
   try {
-    const [users] = await db.promise().query(
+    const [users] = await pool.promise().query(
       'SELECT * FROM users WHERE email = ? AND password = ?',
       [email, password]
     );
@@ -200,7 +200,7 @@ app.post('/api/forgot-password', async (req, res) => {
     return res.status(400).json({ success: false, message: 'Email and new password are required.' });
   }
   try {
-    const [result] = await db.promise().query(
+    const [result] = await pool.promise().query(
       'UPDATE users SET password = ? WHERE email = ?',
       [newPassword, email]
     );
