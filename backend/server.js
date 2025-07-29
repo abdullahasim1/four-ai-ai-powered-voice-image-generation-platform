@@ -95,6 +95,26 @@ app.get('/api/test', (req, res) => {
   res.json({ message: 'Backend is working!', timestamp: new Date().toISOString() });
 });
 
+// Database health check endpoint
+app.get('/api/db-test', async (req, res) => {
+  try {
+    const [result] = await db.promise().query('SELECT 1 as test');
+    res.json({ 
+      success: true, 
+      message: 'Database connection working!',
+      dbState: db.state,
+      test: result[0]
+    });
+  } catch (error) {
+    res.status(500).json({ 
+      success: false, 
+      message: 'Database connection failed',
+      error: error.message,
+      dbState: db.state
+    });
+  }
+});
+
 // Handle CORS preflight requests
 app.options('*', cors());
 
@@ -106,6 +126,15 @@ app.post('/api/signup', async (req, res) => {
   res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With');
   
   const { name, email, password } = req.body;
+
+  // Check if database is connected
+  if (db.state === 'disconnected') {
+    console.error('❌ Database not connected');
+    return res.status(500).json({ 
+      success: false, 
+      message: 'Database connection error. Please check environment variables.' 
+    });
+  }
 
   try {
     const [existingUsers] = await db.promise().query('SELECT * FROM users WHERE email = ?', [email]);
@@ -125,7 +154,11 @@ app.post('/api/signup', async (req, res) => {
     });
   } catch (error) {
     console.error('❌ Signup error:', error);
-    res.status(500).json({ success: false, message: 'Error creating user' });
+    res.status(500).json({ 
+      success: false, 
+      message: 'Error creating user',
+      error: error.message 
+    });
   }
 });
 
