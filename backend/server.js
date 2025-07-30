@@ -71,24 +71,60 @@ pool.getConnection((err, connection) => {
   }
   console.log('✅ MySQL pool connected successfully');
   
-  // Create users table
-  const createTableQuery = `
-    CREATE TABLE IF NOT EXISTS users (
-      id INT AUTO_INCREMENT PRIMARY KEY,
-      name VARCHAR(255) NOT NULL,
-      email VARCHAR(255) NOT NULL UNIQUE,
-      password VARCHAR(255) NOT NULL,
-      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-    )
+  // Check if users table exists and has correct structure
+  const checkTableQuery = `
+    SELECT COLUMN_NAME 
+    FROM INFORMATION_SCHEMA.COLUMNS 
+    WHERE TABLE_SCHEMA = ? AND TABLE_NAME = 'users'
   `;
   
-  connection.query(createTableQuery, (err) => {
+  connection.query(checkTableQuery, [mysqlConfig.database], (err, columns) => {
     if (err) {
-      console.error('❌ Failed to create users table:', err);
-    } else {
-      console.log('✅ Users table is ready');
+      console.error('❌ Failed to check table structure:', err);
+      return;
     }
-    connection.release();
+    
+    const columnNames = columns.map(col => col.COLUMN_NAME);
+    const expectedColumns = ['id', 'name', 'email', 'password', 'created_at'];
+    
+    // Check if all expected columns exist
+    const hasAllColumns = expectedColumns.every(col => columnNames.includes(col));
+    
+    if (!hasAllColumns) {
+      console.log('⚠️ Table structure mismatch, recreating users table...');
+      
+      // Drop and recreate table
+      const dropTableQuery = 'DROP TABLE IF EXISTS users';
+      connection.query(dropTableQuery, (err) => {
+        if (err) {
+          console.error('❌ Failed to drop users table:', err);
+          return;
+        }
+        
+        // Create users table with correct structure
+        const createTableQuery = `
+          CREATE TABLE users (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            name VARCHAR(255) NOT NULL,
+            email VARCHAR(255) NOT NULL UNIQUE,
+            password VARCHAR(255) NOT NULL,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+          )
+        `;
+        
+        connection.query(createTableQuery, (err) => {
+          if (err) {
+            console.error('❌ Failed to create users table:', err);
+          } else {
+            console.log('✅ Users table recreated successfully');
+          }
+          connection.release();
+        });
+      });
+    } else {
+      console.log('✅ Users table structure is correct');
+      connection.release();
+    }
   });
 });
 
