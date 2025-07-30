@@ -198,7 +198,15 @@ app.post('/api/signup', async (req, res) => {
 
 // Login endpoint
 app.post('/api/login', async (req, res) => {
+  // Set CORS headers explicitly
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With');
+  
   const { email, password } = req.body;
+
+  // Log the login attempt
+  console.log('🔐 Login attempt:', { email, password: password ? '***' : 'missing' });
 
   try {
     const [users] = await pool.promise().query(
@@ -206,11 +214,15 @@ app.post('/api/login', async (req, res) => {
       [email, password]
     );
 
+    console.log('🔍 Found users:', users.length);
+
     if (users.length === 0) {
       return res.status(401).json({ success: false, message: 'Invalid credentials' });
     }
 
     const user = users[0];
+    console.log('✅ Login successful for user:', user.email);
+    
     res.json({
       success: true,
       message: 'Login successful',
@@ -222,7 +234,11 @@ app.post('/api/login', async (req, res) => {
     });
   } catch (error) {
     console.error('❌ Login error:', error);
-    res.status(500).json({ success: false, message: 'Error during login' });
+    res.status(500).json({ 
+      success: false, 
+      message: 'Error during login',
+      error: error.message 
+    });
   }
 });
 

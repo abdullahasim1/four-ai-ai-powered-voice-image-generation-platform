@@ -64,13 +64,24 @@ const Login = () => {
         password,
       });
       if (res.data.success) {
+        // Store user data
+        localStorage.setItem("userData", JSON.stringify(res.data.user));
+        localStorage.setItem("loggedIn", "true");
+        
+        if (rememberMe) {
+          localStorage.setItem("rememberMe", "true");
+        }
+
         setSuccess(true);
         setError('');
-        // Optionally redirect or show success message
+        
+        // Navigate to home page
+        navigate("/home");
       } else {
         setError(res.data.message || 'Login failed');
       }
     } catch (err) {
+      console.error('Login error:', err);
       setError(err.response?.data?.message || 'Login failed');
     } finally {
       setLoading(false);
