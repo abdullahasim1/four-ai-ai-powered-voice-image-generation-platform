@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
-import Api from "./api";
+import { HUGGING_FACE_API_KEY } from "./api";
 import { FaImage, FaMagic, FaPalette, FaCamera, FaStar, FaMoon, FaSun, FaMountain, FaTree, FaCloud, FaHeart } from "react-icons/fa";
 
 const ImageGen = () => {
@@ -36,7 +36,7 @@ const ImageGen = () => {
           method: "POST",
           headers: {
             "content-type": "application/json",
-            Authorization: `Bearer ${Api}`,
+            Authorization: `Bearer ${HUGGING_FACE_API_KEY}`,
           },
           body: JSON.stringify({
             inputs: prompt,
