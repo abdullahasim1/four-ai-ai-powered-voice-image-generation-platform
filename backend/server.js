@@ -4,7 +4,7 @@ const mysql = require('mysql2');
 require('dotenv').config();
 
 const app = express();
-const PORT = process.env.PORT || 8080;
+const PORT = process.env.PORT || 3000;
 
 // Allowed frontend URLs
 const allowedOrigins = [
@@ -97,7 +97,7 @@ pool.getConnection((err, connection) => {
 
 // Root route
 app.get('/', (req, res) => {
-  res.send('✅ Four-AI backend is running');
+  res.send('✅ Four-AI backend is running on Railway');
 });
 
 // Test endpoint for CORS
@@ -112,7 +112,7 @@ app.get('/api/db-test', async (req, res) => {
     res.json({ 
       success: true, 
       message: 'Database connection working!',
-      dbState: 'connected', // Indicate connection status
+      dbState: 'connected',
       test: result[0]
     });
   } catch (error) {
