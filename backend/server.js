@@ -41,10 +41,7 @@ const mysqlConfig = {
   database: process.env.MYSQL_ADDON_DB || process.env.MYSQL_DATABASE || process.env.DB_NAME,
   port: process.env.MYSQL_ADDON_PORT || process.env.MYSQL_PORT || process.env.DB_PORT || 3306,
   // Connection pool settings for serverless
-  connectionLimit: 10,
-  acquireTimeout: 60000,
-  timeout: 60000,
-  reconnect: true
+  connectionLimit: 10
 };
 
 // Debug .env values
