@@ -36,9 +36,9 @@ const teamMembers = [
     role: "Lead Developer",
     img: saifImage,
     social: {
-      github: "https://github.com/saif",
-      linkedin: "https://linkedin.com/in/saif",
-      twitter: "https://twitter.com/saif"
+      github: "https://github.com/saif-9-coder",
+      linkedin: "https://www.linkedin.com/in/saif-ur-rahman-677b2b25b/",
+      facebook: "https://www.facebook.com/saif.ur.rahman.321107"
     },
     description: "Full-stack developer with expertise in AI and machine learning",
     icon: <FaCode className="" />,
@@ -49,9 +49,9 @@ const teamMembers = [
     role: "Frontend Developer",
     img: abdullahImage,
     social: {
-      github: "https://github.com/abdullah",
-      linkedin: "https://linkedin.com/in/abdullah",
-      twitter: "https://twitter.com/abdullah"
+      github: "https://github.com/abdullahasim1",
+      linkedin: "https://www.linkedin.com/in/abdullah-bin-asim-654287267/",
+      facebook: "https://www.facebook.com/asim.sahkeel.1"
     },
     description: "Frontend specialist with a passion for creating beautiful interfaces",
     icon: <FaLaptopCode className="" />,
@@ -62,9 +62,9 @@ const teamMembers = [
     role: "Backend Developer",
     img: adeelImage,
     social: {
-      github: "https://github.com/adeel",
-      linkedin: "https://linkedin.com/in/adeel",
-      twitter: "https://twitter.com/adeel"
+      
+      linkedin: "https://www.linkedin.com/in/adeel-hayyat-371597336/",
+      facebook: "https://www.facebook.com/adeel.gujjar.158718"
     },
     description: "Backend expert specializing in scalable architecture",
     icon: <FaServer className="" />,
@@ -75,9 +75,9 @@ const teamMembers = [
     role: "UI/UX Designer",
     img: malikImage,
     social: {
-      github: "https://github.com/malik",
-      linkedin: "https://linkedin.com/in/malik",
-      twitter: "https://twitter.com/malik"
+      
+      linkedin: "https://www.linkedin.com/in/mujahid-azam-34b477340/",
+      facebook: "https://www.facebook.com/muhammad.mujahid.azam.2025"
     },
     description: "Creative designer focused on user-centered design",
     icon: <FaPalette className="" />,

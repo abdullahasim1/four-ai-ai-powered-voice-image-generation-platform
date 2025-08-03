@@ -80,7 +80,7 @@ const SignupPage = () => {
         
         // Redirect to login after successful signup
         setTimeout(() => {
-          navigate('/login');
+          navigate('/home');
         }, 2000);
       } else {
         setError(res.data.message || 'Registration failed');
@@ -122,11 +122,7 @@ const SignupPage = () => {
         className="absolute text-indigo-400 text-6xl bottom-10 left-1/2 -translate-x-1/2 transform transition-all duration-300 z-10"
       />
 
-      <motion.div
-        ref={cardRef}
-        initial={{ opacity: 0, y: 50 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8 }}
+      <div
         className="max-w-sm w-full bg-white/80 backdrop-blur-md shadow-xl rounded-xl p-8 space-y-5 z-20 transform transition-transform duration-300 hover:shadow-2xl"
       >
         <div className="text-center pb-8">
@@ -203,7 +199,7 @@ const SignupPage = () => {
             Log in
           </Link>
         </p>
-      </motion.div>
+      </div>
     </main>
   );
 };
