@@ -43,7 +43,7 @@ const ImageGen = () => {
     setLoading(true);
     try {
       const response = await fetch(
-        "https://api-inference.huggingface.co/models/black-forest-labs/FLUX.1-Krea-dev",
+        "https://api-inference.huggingface.co/models/runwayml/stable-diffusion-v1-5",
         {
           method: "POST",
           headers: {
@@ -242,7 +242,7 @@ const ImageGen = () => {
           transition={{ duration: 0.8, delay: 0.4 }}
           className="mt-8 text-gray-400"
         >
-          © <span className="text-indigo-400">Four AI</span> | Powered by FLUX.1 Krea [dev]
+          © <span className="text-indigo-400">Four AI</span> | Powered by Stable Diffusion v1.5
         </motion.p>
       </div>
     </div>
