@@ -91,12 +91,12 @@ const Navbar = () => {
       <div className="max-w-screen-xl mx-auto px-4 h-16 flex justify-between items-center">
         <Link to="/" className="flex items-center">
           <img 
-            src="./public/logo.png " 
+            src="/logo.png" 
             alt="Logo" height={60} width={50}
             className="h-4 w-auto"
             onError={(e) => {
               e.target.onerror = null;
-              e.target.src = 'logo.png';
+              e.target.src = '/logo.png';
             }}
           />
         </Link>
