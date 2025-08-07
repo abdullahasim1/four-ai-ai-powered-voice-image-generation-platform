@@ -43,7 +43,7 @@ const ImageGen = () => {
     setLoading(true);
     try {
       const response = await fetch(
-        "https://api-inference.huggingface.co/models/runwayml/stable-diffusion-v1-5",
+        "https://api-inference.huggingface.co/models/CompVis/stable-diffusion-v1-4",
         {
           method: "POST",
           headers: {
@@ -60,7 +60,10 @@ const ImageGen = () => {
           }),
         }
       );
-      if (!response.ok) throw new Error(`API request failed with status: ${response.status}`);
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(`API request failed with status: ${response.status}. ${errorText}`);
+      }
       const blob = await response.blob();
       setImage(URL.createObjectURL(blob));
     } catch (error) {
@@ -242,7 +245,7 @@ const ImageGen = () => {
           transition={{ duration: 0.8, delay: 0.4 }}
           className="mt-8 text-gray-400"
         >
-          © <span className="text-indigo-400">Four AI</span> | Powered by Stable Diffusion v1.5
+          © <span className="text-indigo-400">Four AI</span> | Powered by Stable Diffusion v1.4
         </motion.p>
       </div>
     </div>
