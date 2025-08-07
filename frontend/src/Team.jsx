@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 import { 
   FaGithub, 
   FaLinkedin, 
-  FaTwitter, 
+  FaFacebook, 
   FaCode, 
   FaPalette, 
   FaServer, 
@@ -97,7 +97,7 @@ const floatingIcons = [
   { icon: <FaLaptopCode />, color: "text-cyan-400" },
   { icon: <FaGithub />, color: "text-gray-400" },
   { icon: <FaLinkedin />, color: "text-blue-500" },
-  { icon: <FaTwitter />, color: "text-sky-400" },
+  { icon: <FaFacebook />, color: "text-sky-400" },
   { icon: <FaRobot />, color: "text-purple-500" },
   { icon: <FaMagic />, color: "text-violet-400" },
   { icon: <FaHeadphones />, color: "text-rose-400" },
@@ -117,7 +117,7 @@ const floatingIcons = [
   { icon: <FaLaptopCode />, color: "text-cyan-300" },
   { icon: <FaGithub />, color: "text-gray-300" },
   { icon: <FaLinkedin />, color: "text-blue-300" },
-  { icon: <FaTwitter />, color: "text-sky-300" },
+  { icon: <FaFacebook />, color: "text-sky-300" },
   { icon: <FaRobot />, color: "text-purple-300" },
   { icon: <FaMagic />, color: "text-violet-300" },
   { icon: <FaHeadphones />, color: "text-rose-300" },
@@ -281,7 +281,7 @@ const Team = () => {
                       whileTap={{ scale: 0.95 }}
                       className="p-2.5 bg-white/10 backdrop-blur-sm rounded-full text-white hover:bg-white/20 transition-all duration-300 cursor-pointer shadow-lg hover:shadow-xl"
                     >
-                      <FaTwitter className="text-xl" />
+                      <FaFacebook className="text-xl" />
                     </motion.a>
                   </div>
                 </motion.div>
