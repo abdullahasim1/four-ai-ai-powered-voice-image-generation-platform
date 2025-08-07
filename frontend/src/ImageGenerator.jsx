@@ -43,7 +43,7 @@ const ImageGen = () => {
     setLoading(true);
     try {
       const response = await fetch(
-        "https://api-inference.huggingface.co/models/CompVis/stable-diffusion-v1-4",
+        "https://api-inference.huggingface.co/models/Qwen/Qwen-Image",
         {
           method: "POST",
           headers: {
@@ -56,6 +56,8 @@ const ImageGen = () => {
               negative_prompt: negativePrompt,
               num_inference_steps: numInferenceSteps,
               guidance_scale: guidanceScale,
+              width: 1024,
+              height: 1024,
             }
           }),
         }
@@ -122,9 +124,9 @@ const ImageGen = () => {
           className="text-center mb-8"
         >
           <h1 className="text-5xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500">
-            Stable Diffusion <span className="text-indigo-400">3.5</span>
+            Qwen <span className="text-indigo-400">Image</span>
           </h1>
-          <p className="text-gray-300 text-lg">Transform your imagination into stunning visuals</p>
+          <p className="text-gray-300 text-lg">Advanced AI image generation with exceptional text rendering</p>
         </motion.div>
 
         {/* Image Display */}
@@ -164,7 +166,7 @@ const ImageGen = () => {
             <input
               type="text"
               className="w-full p-4 bg-white/10 backdrop-blur-md border border-white/20 rounded-xl text-white placeholder-gray-400 outline-none focus:ring-2 focus:ring-indigo-500"
-              placeholder="Describe your imagination..."
+              placeholder="Describe your imagination... (Try adding text like 'sign saying Hello World')"
               value={prompt}
               onChange={(e) => setPrompt(e.target.value)}
             />
@@ -245,7 +247,7 @@ const ImageGen = () => {
           transition={{ duration: 0.8, delay: 0.4 }}
           className="mt-8 text-gray-400"
         >
-          © <span className="text-indigo-400">Four AI</span> | Powered by Stable Diffusion v1.4
+          © <span className="text-indigo-400">Four AI</span> | Powered by Qwen-Image
         </motion.p>
       </div>
     </div>
