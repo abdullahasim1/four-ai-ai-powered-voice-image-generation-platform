@@ -3,6 +3,15 @@ import { motion } from "framer-motion";
 import { HUGGING_FACE_API_KEY } from "./api";
 import { FaImage, FaMagic, FaPalette, FaCamera, FaStar, FaMoon, FaSun, FaMountain, FaTree, FaCloud, FaHeart } from "react-icons/fa";
 
+// Debug: Show if API key is present (masked)
+if (import.meta.env.DEV) {
+  if (!HUGGING_FACE_API_KEY) {
+    console.error('❌ HUGGING_FACE_API_KEY is missing!');
+  } else {
+    console.log('🔑 Hugging Face API Key loaded:', HUGGING_FACE_API_KEY.slice(0, 6) + '...' + HUGGING_FACE_API_KEY.slice(-4));
+  }
+}
+
 const ImageGen = () => {
   const [prompt, setPrompt] = useState("");
   const [image, setImage] = useState(null);
@@ -27,6 +36,10 @@ const ImageGen = () => {
 
   const generateImage = async () => {
     if (!prompt.trim()) return alert("Please enter a prompt!");
+    if (!HUGGING_FACE_API_KEY) {
+      alert("Hugging Face API key is missing. Please check your .env and restart the dev server.");
+      return;
+    }
     setLoading(true);
     try {
       const response = await fetch(
@@ -52,7 +65,7 @@ const ImageGen = () => {
       setImage(URL.createObjectURL(blob));
     } catch (error) {
       console.error("Error generating image:", error);
-      alert("Error generating image. Please try again.");
+      alert("Error generating image. Please try again.\n" + error.message);
     } finally {
       setLoading(false);
     }
