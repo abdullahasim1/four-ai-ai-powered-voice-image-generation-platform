@@ -27,11 +27,10 @@ const ImageGen = () => {
 
   const generateImage = async () => {
     if (!prompt.trim()) return alert("Please enter a prompt!");
-
     setLoading(true);
     try {
       const response = await fetch(
-        "https://api-inference.huggingface.co/models/stabilityai/stable-diffusion-3.5-large",
+        "https://api-inference.huggingface.co/models/black-forest-labs/FLUX.1-Krea-dev",
         {
           method: "POST",
           headers: {
@@ -48,9 +47,7 @@ const ImageGen = () => {
           }),
         }
       );
-
       if (!response.ok) throw new Error(`API request failed with status: ${response.status}`);
-
       const blob = await response.blob();
       setImage(URL.createObjectURL(blob));
     } catch (error) {
@@ -232,7 +229,7 @@ const ImageGen = () => {
           transition={{ duration: 0.8, delay: 0.4 }}
           className="mt-8 text-gray-400"
         >
-          © <span className="text-indigo-400">Four AI</span> | Powered by Stable Diffusion 3.5
+          © <span className="text-indigo-400">Four AI</span> | Powered by FLUX.1 Krea [dev]
         </motion.p>
       </div>
     </div>
