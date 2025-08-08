@@ -5,6 +5,7 @@ import {
   API_CONFIG, 
   IMAGE_MODELS, 
   retryApiCall, 
+  checkModelStatus,
   validateEnvironment 
 } from "./api";
 import { FaImage, FaMagic, FaPalette, FaCamera, FaStar, FaMoon, FaSun, FaMountain, FaTree, FaCloud, FaHeart } from "react-icons/fa";
@@ -60,14 +61,27 @@ const ImageGen = () => {
     const modelsToTry = [
       IMAGE_MODELS.primary,
       IMAGE_MODELS.fallback1,
-      IMAGE_MODELS.fallback2
+      IMAGE_MODELS.fallback2,
+      IMAGE_MODELS.fallback3,
+      IMAGE_MODELS.fallback4
     ];
     
     for (const model of modelsToTry) {
       try {
         setCurrentModel(model);
+        setStatusMessage(`Checking ${model}...`);
+        console.log(`🔍 Checking model: ${model}`);
+        
+        // Check if model is available first
+        const modelStatus = await checkModelStatus(model);
+        if (!modelStatus.available) {
+          console.log(`❌ Model ${model} not available:`, modelStatus.error);
+          setStatusMessage(`❌ ${model} not available, trying next...`);
+          continue;
+        }
+        
         setStatusMessage(`Trying ${model}...`);
-        console.log(`🔄 Trying model: ${model}`);
+        console.log(`🔄 Trying model: ${model} (state: ${modelStatus.state})`);
         
         const payload = {
           inputs: prompt,
@@ -102,7 +116,8 @@ const ImageGen = () => {
           errorMessage += "• Check your Hugging Face API key\n";
           errorMessage += "• Ensure you have sufficient API credits\n";
           errorMessage += "• Try a simpler prompt\n";
-          errorMessage += "• Check your internet connection\n\n";
+          errorMessage += "• Check your internet connection\n";
+          errorMessage += "• Some models may be temporarily unavailable\n\n";
           errorMessage += `Last error: ${error.message}`;
           
           alert(errorMessage);

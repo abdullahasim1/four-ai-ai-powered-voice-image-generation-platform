@@ -5,11 +5,13 @@ const API_BASE_URL = VITE_BACKEND_URL ? VITE_BACKEND_URL.replace(/\/$/, '') + "/
 // Hugging Face API Configuration
 const HUGGING_FACE_API_KEY = import.meta.env.VITE_HUGGING_FACE_API_KEY;
 
-// Available models with fallbacks
+// Available models with fallbacks - Updated with working models
 const IMAGE_MODELS = {
-  primary: "stabilityai/stable-diffusion-3.5-large",
-  fallback1: "runwayml/stable-diffusion-v1-5",
-  fallback2: "CompVis/stable-diffusion-v1-4",
+  primary: "stabilityai/stable-diffusion-2-1",
+  fallback1: "stabilityai/stable-diffusion-2-base",
+  fallback2: "runwayml/stable-diffusion-v1-5",
+  fallback3: "CompVis/stable-diffusion-v1-4",
+  fallback4: "prompthero/openjourney", // More reliable alternative
   qwen: "Qwen/Qwen-Image"
 };
 
@@ -89,6 +91,38 @@ const makeApiRequest = async (model, payload, options = {}) => {
   }
 };
 
+// Check model availability
+const checkModelStatus = async (model) => {
+  try {
+    const response = await fetch(`${API_CONFIG.baseUrl}/${model}`, {
+      method: 'GET',
+      headers: {
+        'Authorization': `Bearer ${HUGGING_FACE_API_KEY}`,
+        'User-Agent': 'FourAI-ImageGenerator/1.0'
+      }
+    });
+    
+    if (response.ok) {
+      const data = await response.json();
+      return {
+        available: true,
+        state: data.state || 'unknown',
+        pipeline_tag: data.pipeline_tag || 'unknown'
+      };
+    } else {
+      return {
+        available: false,
+        error: response.status
+      };
+    }
+  } catch (error) {
+    return {
+      available: false,
+      error: error.message
+    };
+  }
+};
+
 // Retry mechanism for API calls
 const retryApiCall = async (model, payload, options = {}) => {
   const { retries = API_CONFIG.retries } = options;
@@ -135,5 +169,6 @@ export {
   IMAGE_MODELS, 
   makeApiRequest, 
   retryApiCall,
+  checkModelStatus,
   validateEnvironment 
 };
