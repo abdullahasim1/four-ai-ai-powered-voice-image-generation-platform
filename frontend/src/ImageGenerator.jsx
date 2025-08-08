@@ -43,7 +43,8 @@ const ImageGen = () => {
     setLoading(true);
     try {
       const response = await fetch(
-        "https://api-inference.huggingface.co/models/Qwen/Qwen-Image",
+        "https://api-inference.huggingface.co/models/stabilityai/stable-diffusion-3.5-large",
+        // "https://api-inference.huggingface.co/models/Qwen/Qwen-Image",
         {
           method: "POST",
           headers: {
