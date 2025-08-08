@@ -282,11 +282,12 @@ const Team = () => {
             <div className="relative h-96 md:h-[500px] bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500">
               {/* Placeholder for team group photo - you can replace this with actual team photo */}
               <div className="absolute inset-0 bg-gradient-to-br from-indigo-600/80 via-purple-600/80 to-pink-600/80 flex items-center justify-center">
-                <div className="text-center text-white">
-                  <FaCamera className="text-6xl mx-auto mb-4 opacity-50" />
-                  <h3 className="text-2xl font-bold mb-2">Our Team Photo</h3>
-                  <p className="text-lg opacity-80">Add your team group photo here</p>
-                </div>
+                {/* Replace this placeholder with your actual team photo */}
+                  <img 
+                     src="/path/to/your/team-photo.jpg" 
+                    alt="Our Team" 
+                    className="w-full h-full object-cover"
+                  />
               </div>
               
               {/* Overlay with team stats */}
