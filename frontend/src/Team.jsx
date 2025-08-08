@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
-import React, { useState } from "react";
-import { motion } from "framer-motion";
+import React, { useState, useEffect } from "react";
+import { motion, useScroll, useTransform } from "framer-motion";
 import { 
   FaGithub, 
   FaLinkedin, 
@@ -21,7 +21,12 @@ import {
   FaGlobe,
   FaBolt,
   FaChartLine,
-  FaShieldAlt
+  FaShieldAlt,
+  FaCamera,
+  FaHeart,
+  FaSmile,
+  FaHandshake,
+  FaAward
 } from "react-icons/fa";
 
 import saifImage from "./assets/images/saif.jpg";
@@ -130,6 +135,13 @@ const floatingIcons = [
 
 const Team = () => {
   const [imageLoaded, setImageLoaded] = useState({});
+  const { scrollY } = useScroll();
+  
+  // Parallax transforms
+  const heroY = useTransform(scrollY, [0, 500], [0, -100]);
+  const heroOpacity = useTransform(scrollY, [0, 300], [1, 0.3]);
+  const teamGroupY = useTransform(scrollY, [0, 800], [0, -200]);
+  const teamGroupScale = useTransform(scrollY, [0, 800], [1, 1.1]);
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -193,42 +205,137 @@ const Team = () => {
         ))}
       </div>
 
-      {/* Hero Section */}
+      {/* Hero Section with Parallax */}
       <motion.section
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8 }}
-        className="relative overflow-hidden bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-600 text-white py-20 px-4"
+        style={{ y: heroY, opacity: heroOpacity }}
+        className="relative overflow-hidden bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-600 text-white py-32 px-4 min-h-screen flex items-center"
       >
+        {/* Background Pattern */}
+        <div className="absolute inset-0 opacity-10">
+          <div className="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg width=&quot;60&quot; height=&quot;60&quot; viewBox=&quot;0 0 60 60&quot; xmlns=&quot;http://www.w3.org/2000/svg&quot;%3E%3Cg fill=&quot;none&quot; fill-rule=&quot;evenodd&quot;%3E%3Cg fill=&quot;%23ffffff&quot; fill-opacity=&quot;0.1&quot;%3E%3Ccircle cx=&quot;30&quot; cy=&quot;30&quot; r=&quot;2&quot;/%3E%3C/g%3E%3C/g%3E%3C/svg%3E')]"></div>
+        </div>
+
         <div className="container mx-auto max-w-6xl relative z-10">
           <div className="text-center">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 1, delay: 0.2 }}
+              className="mb-8"
+            >
+              <FaUsers className="text-8xl mx-auto text-white/20" />
+            </motion.div>
+            
             <motion.h1 
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.2 }}
-              className="text-4xl md:text-6xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-white to-blue-100"
+              transition={{ duration: 0.8, delay: 0.4 }}
+              className="text-5xl md:text-7xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-white to-blue-100"
             >
               Meet Our Team
             </motion.h1>
             <motion.p
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.4 }}
-              className="text-xl text-blue-100 max-w-2xl mx-auto"
+              transition={{ duration: 0.8, delay: 0.6 }}
+              className="text-xl md:text-2xl text-blue-100 max-w-3xl mx-auto leading-relaxed"
             >
               The talented people behind our innovative voice AI platform
             </motion.p>
+            
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.8 }}
+              className="mt-8 flex justify-center space-x-4"
+            >
+              <div className="flex items-center space-x-2 text-white/80">
+                <FaHeart className="text-red-400" />
+                <span>Passionate</span>
+              </div>
+              <div className="flex items-center space-x-2 text-white/80">
+                <FaSmile className="text-yellow-400" />
+                <span>Creative</span>
+              </div>
+              <div className="flex items-center space-x-2 text-white/80">
+                <FaHandshake className="text-green-400" />
+                <span>Collaborative</span>
+              </div>
+            </motion.div>
           </div>
         </div>
       </motion.section>
 
-      {/* Team Grid */}
+      {/* Team Group Cover Photo Section with Parallax */}
+      <motion.section
+        style={{ y: teamGroupY, scale: teamGroupScale }}
+        className="relative py-20 overflow-hidden"
+      >
+        <div className="container mx-auto max-w-6xl px-4">
+          <motion.div
+            initial={{ opacity: 0, y: 50 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 1 }}
+            className="relative rounded-3xl overflow-hidden shadow-2xl"
+          >
+            {/* Team Group Cover Photo */}
+            <div className="relative h-96 md:h-[500px] bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500">
+              {/* Placeholder for team group photo - you can replace this with actual team photo */}
+              <div className="absolute inset-0 bg-gradient-to-br from-indigo-600/80 via-purple-600/80 to-pink-600/80 flex items-center justify-center">
+                <div className="text-center text-white">
+                  <FaCamera className="text-6xl mx-auto mb-4 opacity-50" />
+                  <h3 className="text-2xl font-bold mb-2">Our Team Photo</h3>
+                  <p className="text-lg opacity-80">Add your team group photo here</p>
+                </div>
+              </div>
+              
+              {/* Overlay with team stats */}
+              <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-8">
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-white">
+                  <div className="text-center">
+                    <div className="text-3xl font-bold">4</div>
+                    <div className="text-sm opacity-80">Team Members</div>
+                  </div>
+                  <div className="text-center">
+                    <div className="text-3xl font-bold">100%</div>
+                    <div className="text-sm opacity-80">Dedication</div>
+                  </div>
+                  <div className="text-center">
+                    <div className="text-3xl font-bold">24/7</div>
+                    <div className="text-sm opacity-80">Support</div>
+                  </div>
+                  <div className="text-center">
+                    <div className="text-3xl font-bold">∞</div>
+                    <div className="text-sm opacity-80">Innovation</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </motion.div>
+        </div>
+      </motion.section>
+
+      {/* Individual Team Members Section */}
       <motion.section
         variants={containerVariants}
         initial="hidden"
-        animate="visible"
+        whileInView="visible"
         className="container mx-auto max-w-6xl py-20 px-4"
       >
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
+          className="text-center mb-16"
+        >
+          <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
+            Meet the Team
+          </h2>
+          <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+            Each member brings unique expertise and passion to create amazing experiences
+          </p>
+        </motion.div>
+
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           {teamMembers.map((member, index) => (
             <motion.div
@@ -253,36 +360,42 @@ const Team = () => {
                   className={`absolute bottom-0 left-0 right-0 p-4 transform translate-y-full group-hover:translate-y-0 transition-transform duration-300`}
                 >
                   <div className="flex space-x-3 justify-center">
-                    <motion.a
-                      href={member.social.github}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      whileHover={{ scale: 1.2, y: -5 }}
-                      whileTap={{ scale: 0.95 }}
-                      className="p-2.5 bg-white/10 backdrop-blur-sm rounded-full text-white hover:bg-white/20 transition-all duration-300 cursor-pointer shadow-lg hover:shadow-xl"
-                    >
-                      <FaGithub className="text-xl" />
-                    </motion.a>
-                    <motion.a
-                      href={member.social.linkedin}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      whileHover={{ scale: 1.2, y: -5 }}
-                      whileTap={{ scale: 0.95 }}
-                      className="p-2.5 bg-white/10 backdrop-blur-sm rounded-full text-white hover:bg-white/20 transition-all duration-300 cursor-pointer shadow-lg hover:shadow-xl"
-                    >
-                      <FaLinkedin className="text-xl" />
-                    </motion.a>
-                    <motion.a
-                      href={member.social.twitter}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      whileHover={{ scale: 1.2, y: -5 }}
-                      whileTap={{ scale: 0.95 }}
-                      className="p-2.5 bg-white/10 backdrop-blur-sm rounded-full text-white hover:bg-white/20 transition-all duration-300 cursor-pointer shadow-lg hover:shadow-xl"
-                    >
-                      <FaFacebook className="text-xl" />
-                    </motion.a>
+                    {member.social.github && (
+                      <motion.a
+                        href={member.social.github}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        whileHover={{ scale: 1.2, y: -5 }}
+                        whileTap={{ scale: 0.95 }}
+                        className="p-2.5 bg-white/10 backdrop-blur-sm rounded-full text-white hover:bg-white/20 transition-all duration-300 cursor-pointer shadow-lg hover:shadow-xl"
+                      >
+                        <FaGithub className="text-xl" />
+                      </motion.a>
+                    )}
+                    {member.social.linkedin && (
+                      <motion.a
+                        href={member.social.linkedin}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        whileHover={{ scale: 1.2, y: -5 }}
+                        whileTap={{ scale: 0.95 }}
+                        className="p-2.5 bg-white/10 backdrop-blur-sm rounded-full text-white hover:bg-white/20 transition-all duration-300 cursor-pointer shadow-lg hover:shadow-xl"
+                      >
+                        <FaLinkedin className="text-xl" />
+                      </motion.a>
+                    )}
+                    {member.social.facebook && (
+                      <motion.a
+                        href={member.social.facebook}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        whileHover={{ scale: 1.2, y: -5 }}
+                        whileTap={{ scale: 0.95 }}
+                        className="p-2.5 bg-white/10 backdrop-blur-sm rounded-full text-white hover:bg-white/20 transition-all duration-300 cursor-pointer shadow-lg hover:shadow-xl"
+                      >
+                        <FaFacebook className="text-xl" />
+                      </motion.a>
+                    )}
                   </div>
                 </motion.div>
               </div>
@@ -334,12 +447,19 @@ const Team = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.4 }}
+            className="flex flex-col sm:flex-row gap-4 justify-center"
           >
             <a
               href="#careers"
               className="inline-block px-8 py-4 bg-white text-indigo-600 rounded-full text-lg font-bold hover:bg-blue-50 transition-all duration-300 shadow-lg hover:shadow-xl"
             >
               View Open Positions
+            </a>
+            <a
+              href="#contact"
+              className="inline-block px-8 py-4 border-2 border-white text-white rounded-full text-lg font-bold hover:bg-white hover:text-indigo-600 transition-all duration-300"
+            >
+              Get in Touch
             </a>
           </motion.div>
         </div>
