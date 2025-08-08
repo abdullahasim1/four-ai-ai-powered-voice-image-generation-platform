@@ -1,12 +1,19 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
-import { HUGGING_FACE_API_KEY } from "./api";
+import { 
+  HUGGING_FACE_API_KEY, 
+  API_CONFIG, 
+  IMAGE_MODELS, 
+  retryApiCall, 
+  validateEnvironment 
+} from "./api";
 import { FaImage, FaMagic, FaPalette, FaCamera, FaStar, FaMoon, FaSun, FaMountain, FaTree, FaCloud, FaHeart } from "react-icons/fa";
 
 // Debug: Show if API key is present (masked)
 if (import.meta.env.DEV) {
-  if (!HUGGING_FACE_API_KEY) {
-    console.error('❌ HUGGING_FACE_API_KEY is missing!');
+  const envErrors = validateEnvironment();
+  if (envErrors.length > 0) {
+    console.error('❌ Environment validation errors:', envErrors);
   } else {
     console.log('🔑 Hugging Face API Key loaded:', HUGGING_FACE_API_KEY.slice(0, 6) + '...' + HUGGING_FACE_API_KEY.slice(-4));
   }
@@ -19,6 +26,8 @@ const ImageGen = () => {
   const [negativePrompt, setNegativePrompt] = useState("");
   const [numInferenceSteps, setNumInferenceSteps] = useState(28);
   const [guidanceScale, setGuidanceScale] = useState(3.5);
+  const [currentModel, setCurrentModel] = useState("");
+  const [statusMessage, setStatusMessage] = useState("");
 
   const floatingIcons = [
     { icon: <FaImage />, color: "text-purple-400" },
@@ -36,45 +45,74 @@ const ImageGen = () => {
 
   const generateImage = async () => {
     if (!prompt.trim()) return alert("Please enter a prompt!");
-    if (!HUGGING_FACE_API_KEY) {
-      alert("Hugging Face API key is missing. Please check your .env and restart the dev server.");
+    
+    const envErrors = validateEnvironment();
+    if (envErrors.length > 0) {
+      alert(`Configuration error: ${envErrors.join(', ')}`);
       return;
     }
+    
     setLoading(true);
-    try {
-      const response = await fetch(
-        "https://api-inference.huggingface.co/models/stabilityai/stable-diffusion-3.5-large",
-        // "https://api-inference.huggingface.co/models/Qwen/Qwen-Image",
-        {
-          method: "POST",
-          headers: {
-            "content-type": "application/json",
-            Authorization: `Bearer ${HUGGING_FACE_API_KEY}`,
-          },
-          body: JSON.stringify({
-            inputs: prompt,
-            parameters: {
-              negative_prompt: negativePrompt,
-              num_inference_steps: numInferenceSteps,
-              guidance_scale: guidanceScale,
-              width: 1024,
-              height: 1024,
-            }
-          }),
+    setCurrentModel("");
+    setStatusMessage("Initializing...");
+    
+    // Try models in order of preference
+    const modelsToTry = [
+      IMAGE_MODELS.primary,
+      IMAGE_MODELS.fallback1,
+      IMAGE_MODELS.fallback2
+    ];
+    
+    for (const model of modelsToTry) {
+      try {
+        setCurrentModel(model);
+        setStatusMessage(`Trying ${model}...`);
+        console.log(`🔄 Trying model: ${model}`);
+        
+        const payload = {
+          inputs: prompt,
+          parameters: {
+            negative_prompt: negativePrompt,
+            num_inference_steps: numInferenceSteps,
+            guidance_scale: guidanceScale,
+            width: 1024,
+            height: 1024,
+          }
+        };
+        
+        const response = await retryApiCall(model, payload, {
+          timeout: 60000, // 60 seconds for image generation
+          retries: 2
+        });
+        
+        const blob = await response.blob();
+        setImage(URL.createObjectURL(blob));
+        setStatusMessage(`✅ Generated using ${model}`);
+        console.log(`✅ Successfully generated image using ${model}`);
+        return; // Success, exit the loop
+        
+      } catch (error) {
+        console.error(`❌ Failed with model ${model}:`, error.message);
+        setStatusMessage(`❌ Failed with ${model}, trying next...`);
+        
+        // If this is the last model, show error
+        if (model === modelsToTry[modelsToTry.length - 1]) {
+          let errorMessage = "Failed to generate image with all available models.\n\n";
+          errorMessage += "Common issues:\n";
+          errorMessage += "• Check your Hugging Face API key\n";
+          errorMessage += "• Ensure you have sufficient API credits\n";
+          errorMessage += "• Try a simpler prompt\n";
+          errorMessage += "• Check your internet connection\n\n";
+          errorMessage += `Last error: ${error.message}`;
+          
+          alert(errorMessage);
+          setStatusMessage("❌ All models failed");
         }
-      );
-      if (!response.ok) {
-        const errorText = await response.text();
-        throw new Error(`API request failed with status: ${response.status}. ${errorText}`);
+        // Continue to next model
       }
-      const blob = await response.blob();
-      setImage(URL.createObjectURL(blob));
-    } catch (error) {
-      console.error("Error generating image:", error);
-      alert("Error generating image. Please try again.\n" + error.message);
-    } finally {
-      setLoading(false);
     }
+    
+    setLoading(false);
   };
 
   const handleDownload = () => {
@@ -138,16 +176,29 @@ const ImageGen = () => {
           transition={{ duration: 0.5 }}
         >
           {loading ? (
-            <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-indigo-400"></div>
+            <div className="text-center">
+              <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-indigo-400 mx-auto mb-4"></div>
+              <p className="text-gray-300 text-sm">{statusMessage}</p>
+              {currentModel && (
+                <p className="text-indigo-400 text-xs mt-2">Model: {currentModel}</p>
+              )}
+            </div>
           ) : image ? (
-            <motion.img
-              src={image}
-              alt="Generated"
-              className="w-full h-full object-cover"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 0.7 }}
-            />
+            <div className="relative w-full h-full">
+              <motion.img
+                src={image}
+                alt="Generated"
+                className="w-full h-full object-cover"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.7 }}
+              />
+              {statusMessage && (
+                <div className="absolute bottom-2 left-2 right-2 bg-black/70 backdrop-blur-sm rounded-lg p-2">
+                  <p className="text-white text-xs text-center">{statusMessage}</p>
+                </div>
+              )}
+            </div>
           ) : (
             <div className="text-center p-6">
               <FaImage className="text-6xl text-indigo-400 mx-auto mb-4" />
