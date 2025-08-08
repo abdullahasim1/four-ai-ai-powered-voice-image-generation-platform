@@ -67,10 +67,28 @@ const VoiceChanger = () => {
   const [processing, setProcessing] = useState(false);
   const [error, setError] = useState("");
   const [processedBlob, setProcessedBlob] = useState(null);
+  const [fileDuration, setFileDuration] = useState(null);
   const audioRef = useRef(null);
 
-  const handleFileChange = (event) => {
-    setFile(event.target.files[0]);
+  const handleFileChange = async (event) => {
+    const selectedFile = event.target.files[0];
+    setFile(selectedFile);
+    
+    if (selectedFile) {
+      try {
+        const arrayBuffer = await selectedFile.arrayBuffer();
+        const tempCtx = new (window.AudioContext || window.webkitAudioContext)();
+        const decoded = await tempCtx.decodeAudioData(arrayBuffer);
+        const duration = decoded.duration;
+        setFileDuration(duration);
+        tempCtx.close();
+      } catch (err) {
+        console.error("Error reading file duration:", err);
+        setFileDuration(null);
+      }
+    } else {
+      setFileDuration(null);
+    }
   };
 
   const handleEffectChange = (e) => {
@@ -82,8 +100,22 @@ const VoiceChanger = () => {
     return new Promise(async (resolve, reject) => {
       try {
         const arrayBuffer = await file.arrayBuffer();
-        const audioCtx = new (window.OfflineAudioContext || window.webkitOfflineAudioContext)(1, 44100 * 120, 44100); // 2 min max
-        const decoded = await audioCtx.decodeAudioData(arrayBuffer);
+        const tempCtx = new (window.AudioContext || window.webkitAudioContext)();
+        const decoded = await tempCtx.decodeAudioData(arrayBuffer);
+        tempCtx.close(); // Close the temporary context
+        
+        // Calculate the actual duration in samples, accounting for effects that might extend the audio
+        let durationInSamples = Math.ceil(decoded.length * speed);
+        
+        // Add extra duration for effects that extend the audio
+        if (effect === "echo") {
+          durationInSamples += Math.ceil(0.5 * 44100); // Add 0.5 seconds for echo tail
+        } else if (effect === "reverb") {
+          durationInSamples += Math.ceil(2 * 44100); // Add 2 seconds for reverb tail
+        }
+        
+        const audioCtx = new (window.OfflineAudioContext || window.webkitOfflineAudioContext)(1, durationInSamples, 44100);
+        
         let source = audioCtx.createBufferSource();
         source.buffer = decoded;
         source.playbackRate.value = speed;
@@ -216,6 +248,9 @@ const VoiceChanger = () => {
         <h1 className="text-4xl font-bold text-center text-indigo-700 mb-6">
           Voice Changer
         </h1>
+        <p className="text-center text-indigo-600 mb-6">
+          Apply effects to your full audio file - no time limits!
+        </p>
 
         <input
           type="file"
@@ -223,6 +258,13 @@ const VoiceChanger = () => {
           className="w-full mb-4 p-3 bg-white/80 rounded-xl border-2 border-indigo-200 focus:border-indigo-400 shadow"
           onChange={handleFileChange}
         />
+        {fileDuration && (
+          <div className="w-full mb-4 p-3 bg-green-50 border-2 border-green-200 rounded-xl">
+            <p className="text-green-700 font-semibold">
+              File Duration: {Math.floor(fileDuration / 60)}:{(fileDuration % 60).toFixed(1).padStart(4, '0')}
+            </p>
+          </div>
+        )}
 
         <div className="flex flex-col mb-6 w-full">
           <label className="text-lg font-semibold text-indigo-700 mb-2">Choose an Effect</label>
@@ -261,7 +303,7 @@ const VoiceChanger = () => {
           className="w-full py-3 rounded-xl bg-gradient-to-r from-green-400 to-blue-500 text-white font-bold shadow-lg hover:from-green-500 hover:to-blue-600 transition"
           disabled={processing}
         >
-          {processing ? "Processing..." : "Apply Effect"}
+          {processing ? "Processing Full Audio..." : "Apply Effect"}
         </button>
         {error && <div className="text-red-600 mt-2">{error}</div>}
         {audioUrl && (
