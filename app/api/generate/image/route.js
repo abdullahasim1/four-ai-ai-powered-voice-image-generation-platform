@@ -1,5 +1,6 @@
 import { getUserFromRequest } from "@/lib/session";
 import { readJson } from "@/lib/http";
+import { getImageQuota, trackImageGeneration } from "@/lib/usage";
 
 const API_BASE = "https://api-inference.huggingface.co/models";
 
@@ -38,6 +39,21 @@ export async function POST(request) {
   if (!auth) {
     return Response.json({ success: false, message: "Session expired. Please log in again." }, { status: 401 });
   }
+  if (auth.banned) {
+    return Response.json({ success: false, message: "Your account has been banned." }, { status: 403 });
+  }
+
+  // Daily quota so one account can't burn through the Hugging Face allowance
+  const quota = await getImageQuota(auth.user.id);
+  if (auth.user.role !== "admin" && quota.remaining <= 0) {
+    return Response.json(
+      {
+        success: false,
+        message: `Daily image limit reached (${quota.limit}/day). Try again tomorrow.`,
+      },
+      { status: 429 }
+    );
+  }
 
   const apiKey = process.env.HUGGING_FACE_API_KEY;
   if (!apiKey) {
@@ -73,10 +89,12 @@ export async function POST(request) {
     try {
       const response = await callModel(model, payload, apiKey);
       const buffer = Buffer.from(await response.arrayBuffer());
+      await trackImageGeneration(auth.user.id, prompt);
       return new Response(buffer, {
         headers: {
           "Content-Type": response.headers.get("content-type") || "image/png",
           "X-Model": model,
+          "X-Quota-Remaining": String(Math.max(0, quota.remaining - 1)),
           "Cache-Control": "no-store",
         },
       });
