@@ -64,7 +64,8 @@ export async function POST(request) {
     }
 
     const token = crypto.randomUUID();
-    await getDb()`INSERT INTO sessions (token, user_id) VALUES (${token}, ${user.id})`;
+    const expires = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000); // 30 days
+    await getDb()`INSERT INTO sessions (token, user_id, expires_at) VALUES (${token}, ${user.id}, ${expires})`;
 
     return Response.json({ success: true, message: "Login successful", token, user: publicUser(user) });
   } catch (error) {
