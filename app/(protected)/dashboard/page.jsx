@@ -2,38 +2,36 @@
 
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
+import { FaArrowRight } from "react-icons/fa";
 import {
-  FaArrowRight,
-  FaClosedCaptioning,
-  FaHistory,
-  FaImage,
-  FaMicrophoneAlt,
-  FaRobot,
-  FaSlidersH,
-  FaThLarge,
-  FaVolumeUp,
-  FaWaveSquare,
-} from "react-icons/fa";
+  FiClock,
+  FiFileText,
+  FiGrid,
+  FiImage,
+  FiMic,
+  FiSliders,
+  FiVolume2,
+} from "react-icons/fi";
 import { accountApi } from "@/lib/api";
 import { getSession } from "@/lib/auth-client";
 
 const IMAGE_DAILY_LIMIT = 25;
 
 const FEATURE_META = {
-  "voice-generator": { label: "Voice Generator", icon: <FaRobot />, group: "voice" },
-  "text-to-speech": { label: "Text to Speech", icon: <FaMicrophoneAlt />, group: "voice" },
-  "speech-to-text": { label: "Speech to Text", icon: <FaClosedCaptioning />, group: "voice" },
-  "voice-changer": { label: "Voice Changer", icon: <FaWaveSquare />, group: "voice" },
-  "image-generator": { label: "Image Generator", icon: <FaImage />, group: "image" },
-  image: { label: "Image Generator", icon: <FaImage />, group: "image" },
+  "voice-generator": { label: "Voice Generator", icon: <FiMic />, group: "voice" },
+  "text-to-speech": { label: "Text to Speech", icon: <FiVolume2 />, group: "voice" },
+  "speech-to-text": { label: "Speech to Text", icon: <FiFileText />, group: "voice" },
+  "voice-changer": { label: "Voice Changer", icon: <FiSliders />, group: "voice" },
+  "image-generator": { label: "Image Generator", icon: <FiImage />, group: "image" },
+  image: { label: "Image Generator", icon: <FiImage />, group: "image" },
 };
 
 const QUICK_TOOLS = [
-  { to: "/voice-generator", label: "Voice Generator", text: "Create custom AI voices", icon: <FaMicrophoneAlt /> },
-  { to: "/text-to-speech", label: "Text to Speech", text: "Convert text to audio", icon: <FaVolumeUp /> },
-  { to: "/voicechanger", label: "Voice Changer", text: "Change your voice", icon: <FaSlidersH /> },
-  { to: "/imagegenerator", label: "Image Generator", text: "Create images from text", icon: <FaImage /> },
-  { to: "/speech-to-text", label: "Speech to Text", text: "Transcribe your voice live", icon: <FaClosedCaptioning /> },
+  { to: "/voice-generator", label: "Voice Generator", text: "Create custom AI voices", icon: <FiMic />, tint: "bg-violet-500/10 text-violet-600 dark:text-violet-300" },
+  { to: "/text-to-speech", label: "Text to Speech", text: "Convert text to audio", icon: <FiVolume2 />, tint: "bg-sky-500/10 text-sky-600 dark:text-sky-300" },
+  { to: "/voicechanger", label: "Voice Changer", text: "Change your voice", icon: <FiSliders />, tint: "bg-fuchsia-500/10 text-fuchsia-600 dark:text-fuchsia-300" },
+  { to: "/imagegenerator", label: "Image Generator", text: "Create images from text", icon: <FiImage />, tint: "bg-amber-500/10 text-amber-600 dark:text-amber-300" },
+  { to: "/speech-to-text", label: "Speech to Text", text: "Transcribe your voice live", icon: <FiFileText />, tint: "bg-emerald-500/10 text-emerald-600 dark:text-emerald-300" },
 ];
 
 function timeAgo(iso) {
@@ -90,10 +88,10 @@ export default function Dashboard() {
   const firstName = (user?.name || "").trim().split(/\s+/)[0] || "there";
 
   const statCards = [
-    { icon: <FaThLarge />, value: stats.total, label: "Total Creations" },
-    { icon: <FaMicrophoneAlt />, value: stats.voice, label: "Voice Generations" },
-    { icon: <FaImage />, value: stats.images, label: "Images Created" },
-    { icon: <FaHistory />, value: stats.imagesLeft, label: "Images Left Today" },
+    { icon: <FiGrid />, value: stats.total, label: "Total Creations", tint: "bg-violet-500/10 text-violet-600 dark:text-violet-300" },
+    { icon: <FiMic />, value: stats.voice, label: "Voice Generations", tint: "bg-sky-500/10 text-sky-600 dark:text-sky-300" },
+    { icon: <FiImage />, value: stats.images, label: "Images Created", tint: "bg-fuchsia-500/10 text-fuchsia-600 dark:text-fuchsia-300" },
+    { icon: <FiClock />, value: stats.imagesLeft, label: "Images Left Today", tint: "bg-amber-500/10 text-amber-600 dark:text-amber-300" },
   ];
 
   return (
@@ -115,7 +113,7 @@ export default function Dashboard() {
       <div className="mt-8 grid grid-cols-2 gap-4 xl:grid-cols-4">
         {statCards.map((card) => (
           <div key={card.label} className="glass-card flex items-center gap-4 p-5">
-            <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-[var(--primary-soft)] text-lg text-[var(--primary)]">
+            <span className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl text-lg ${card.tint}`}>
               {card.icon}
             </span>
             <span>
@@ -133,7 +131,7 @@ export default function Dashboard() {
       <div className="grid grid-cols-2 gap-4 md:grid-cols-3 xl:grid-cols-5">
         {QUICK_TOOLS.map((tool) => (
           <Link key={tool.to} href={tool.to} className="glass-card card-hover group p-5">
-            <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-violet-600 to-fuchsia-500 text-lg text-white shadow-lg shadow-violet-500/25">
+            <span className={`flex h-12 w-12 items-center justify-center rounded-2xl text-lg ${tool.tint}`}>
               {tool.icon}
             </span>
             <span className="mt-4 block font-display font-bold t-text">{tool.label}</span>
@@ -161,7 +159,7 @@ export default function Dashboard() {
           </div>
         ) : history.length === 0 ? (
           <div className="p-10 text-center">
-            <FaHistory className="mx-auto mb-3 text-3xl text-[var(--primary)] opacity-50" />
+            <FiClock className="mx-auto mb-3 text-3xl text-[var(--primary)] opacity-50" />
             <p className="font-medium t-text">No creations yet</p>
             <p className="mt-1 text-sm t-muted">
               Pick a tool above and make your first voice or image — it will show up here.
@@ -169,7 +167,7 @@ export default function Dashboard() {
           </div>
         ) : (
           history.slice(0, 5).map((item) => {
-            const meta = FEATURE_META[item.feature] || { label: item.feature, icon: <FaHistory /> };
+            const meta = FEATURE_META[item.feature] || { label: item.feature, icon: <FiClock /> };
             return (
               <Link key={item.id} href="/history" className="flex items-center gap-4 px-5 py-4 transition-colors hover:bg-[var(--surface-2)]">
                 <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-[var(--primary-soft)] text-[var(--primary)]">

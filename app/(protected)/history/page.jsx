@@ -2,27 +2,20 @@
 
 import { Suspense, useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "next/navigation";
-import {
-  FaClosedCaptioning,
-  FaHistory,
-  FaImage,
-  FaMicrophone,
-  FaRobot,
-  FaSearch,
-  FaWaveSquare,
-} from "react-icons/fa";
+import { FaSearch } from "react-icons/fa";
+import { FiClock, FiFileText, FiImage, FiMic, FiSliders, FiVolume2 } from "react-icons/fi";
 
 import { ToolHeader } from "@/components/PageShell";
 import { toast } from "@/lib/toast";
 import { accountApi } from "@/lib/api";
 
 const FEATURE_META = {
-  "text-to-speech": { label: "Text to Speech", icon: <FaMicrophone />, group: "voice" },
-  "voice-generator": { label: "Voice Generator", icon: <FaRobot />, group: "voice" },
-  "speech-to-text": { label: "Speech to Text", icon: <FaClosedCaptioning />, group: "voice" },
-  "voice-changer": { label: "Voice Changer", icon: <FaWaveSquare />, group: "voice" },
-  "image-generator": { label: "Image Generator", icon: <FaImage />, group: "image" },
-  image: { label: "Image Generator", icon: <FaImage />, group: "image" },
+  "text-to-speech": { label: "Text to Speech", icon: <FiVolume2 />, group: "voice" },
+  "voice-generator": { label: "Voice Generator", icon: <FiMic />, group: "voice" },
+  "speech-to-text": { label: "Speech to Text", icon: <FiFileText />, group: "voice" },
+  "voice-changer": { label: "Voice Changer", icon: <FiSliders />, group: "voice" },
+  "image-generator": { label: "Image Generator", icon: <FiImage />, group: "image" },
+  image: { label: "Image Generator", icon: <FiImage />, group: "image" },
 };
 
 const formatDate = (iso) =>
@@ -94,7 +87,7 @@ function HistoryContent() {
   return (
     <div className="mx-auto max-w-6xl px-4 py-8 sm:px-6">
       <ToolHeader
-        icon={<FaHistory />}
+        icon={<FiClock />}
         title="My Creations"
         subtitle="Everything you've generated, synced with your account."
       />
@@ -131,7 +124,7 @@ function HistoryContent() {
         </div>
       ) : history.length === 0 ? (
         <div className="glass-card p-10 text-center">
-          <FaHistory className="mx-auto mb-4 text-4xl text-[var(--primary)] opacity-50" />
+          <FiClock className="mx-auto mb-4 text-4xl text-[var(--primary)] opacity-50" />
           <p className="font-medium t-text">Nothing here yet</p>
           <p className="mt-1 text-sm t-muted">
             Start using the AI tools and your creations will appear here.
@@ -147,7 +140,7 @@ function HistoryContent() {
           {visible.map((item) => {
             const meta = FEATURE_META[item.feature] || {
               label: item.feature,
-              icon: <FaHistory />,
+              icon: <FiClock />,
             };
             return (
               <div key={item.id} className="flex items-center gap-4 px-5 py-4 transition-colors hover:bg-[var(--surface-2)]">

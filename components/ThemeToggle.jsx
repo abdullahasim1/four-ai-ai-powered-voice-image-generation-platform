@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { FaMoon, FaSun } from "react-icons/fa";
+import { FiMoon, FiSun } from "react-icons/fi";
 import { applyTheme, getThemePref, isDarkActive } from "@/lib/theme";
 
 /** Compact sun/moon toggle for headers. Cycles light <-> dark. */
@@ -26,7 +26,7 @@ export default function ThemeToggle({ className = "" }) {
       title={dark ? "Light mode" : "Dark mode"}
       className={`flex h-9 w-9 items-center justify-center rounded-full border border-line bg-surface text-[var(--muted)] transition-colors hover:text-[var(--primary)] ${className}`}
     >
-      {dark ? <FaSun className="text-sm" /> : <FaMoon className="text-sm" />}
+      {dark ? <FiSun className="text-base" /> : <FiMoon className="text-base" />}
     </button>
   );
 }

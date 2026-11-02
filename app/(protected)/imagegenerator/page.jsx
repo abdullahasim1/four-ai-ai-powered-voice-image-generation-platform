@@ -3,6 +3,7 @@
 import { Suspense, useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { FaDownload, FaImage, FaMagic } from "react-icons/fa";
+import { FiImage } from "react-icons/fi";
 
 import { ToolHeader } from "@/components/PageShell";
 import { toast } from "@/lib/toast";
@@ -86,14 +87,15 @@ function ImageGeneratorContent() {
   return (
     <div className="mx-auto max-w-6xl px-4 py-8 sm:px-6">
       <ToolHeader
-        icon={<FaImage />}
+        icon={<FiImage />}
         title="Image Generator"
         subtitle="Create stunning images from text using advanced AI models."
       />
 
-      <div className="grid items-start gap-6 lg:grid-cols-[380px_minmax(0,1fr)]">
+      <div className="glass-card overflow-hidden">
+      <div className="grid lg:grid-cols-[380px_minmax(0,1fr)]">
         {/* Controls */}
-        <div className="glass-card space-y-5 p-6">
+        <div className="space-y-5 border-b border-line p-6 lg:border-b-0 lg:border-r">
           <div>
             <label className="input-label"><FaMagic /> Prompt</label>
             <textarea
@@ -179,7 +181,7 @@ function ImageGeneratorContent() {
         </div>
 
         {/* Preview */}
-        <div className="glass-card relative flex aspect-square w-full items-center justify-center overflow-hidden !rounded-3xl lg:aspect-auto lg:min-h-[560px]">
+        <div className="relative flex aspect-square w-full items-center justify-center overflow-hidden lg:aspect-auto lg:min-h-[560px]">
           {loading ? (
             <div className="p-8 text-center">
               <span className="mx-auto mb-4 block h-14 w-14 animate-spin rounded-full border-4 border-violet-500/20 border-t-violet-500" />
@@ -211,6 +213,7 @@ function ImageGeneratorContent() {
             </div>
           )}
         </div>
+      </div>
       </div>
     </div>
   );

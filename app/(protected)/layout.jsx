@@ -26,7 +26,8 @@ function TopBar({ user, onMenu }) {
       >
         <FaBars className="text-sm" />
       </button>
-      <form onSubmit={submitSearch} className="relative min-w-0 flex-1 sm:max-w-xs">
+      <div className="flex-1" />
+      <form onSubmit={submitSearch} className="relative min-w-0 w-40 sm:w-64">
         <FaSearch className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-xs t-faint" />
         <input
           value={query}

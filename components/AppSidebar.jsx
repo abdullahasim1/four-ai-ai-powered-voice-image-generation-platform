@@ -2,37 +2,36 @@
 
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
+import { FaCrown, FaSignOutAlt } from "react-icons/fa";
 import {
-  FaClosedCaptioning,
-  FaCog,
-  FaCrown,
-  FaHistory,
-  FaImage,
-  FaMicrophoneAlt,
-  FaSignOutAlt,
-  FaSlidersH,
-  FaThLarge,
-  FaThList,
-  FaUser,
-  FaUserCircle,
-  FaVolumeUp,
-} from "react-icons/fa";
+  FiClock,
+  FiFileText,
+  FiGrid,
+  FiHome,
+  FiImage,
+  FiMic,
+  FiSettings,
+  FiShield,
+  FiSliders,
+  FiUser,
+  FiVolume2,
+} from "react-icons/fi";
 import { clearSession } from "@/lib/auth-client";
 import { authApi } from "@/lib/api";
 
 export const TOOL_LINKS = [
-  { to: "/voice-generator", label: "Voice Generator", icon: <FaMicrophoneAlt /> },
-  { to: "/text-to-speech", label: "Text to Speech", icon: <FaVolumeUp /> },
-  { to: "/speech-to-text", label: "Speech to Text", icon: <FaClosedCaptioning /> },
-  { to: "/voicechanger", label: "Voice Changer", icon: <FaSlidersH /> },
-  { to: "/imagegenerator", label: "Image Generator", icon: <FaImage /> },
+  { to: "/voice-generator", label: "Voice Generator", icon: <FiMic /> },
+  { to: "/text-to-speech", label: "Text to Speech", icon: <FiVolume2 /> },
+  { to: "/speech-to-text", label: "Speech to Text", icon: <FiFileText /> },
+  { to: "/voicechanger", label: "Voice Changer", icon: <FiSliders /> },
+  { to: "/imagegenerator", label: "Image Generator", icon: <FiImage /> },
 ];
 
 const MANAGE_LINKS = [
-  { to: "/history", label: "My Creations", icon: <FaHistory /> },
-  { to: "/templates", label: "Templates", icon: <FaThList /> },
-  { to: "/profile", label: "Profile", icon: <FaUser /> },
-  { to: "/settings", label: "Settings", icon: <FaCog /> },
+  { to: "/history", label: "My Creations", icon: <FiClock /> },
+  { to: "/templates", label: "Templates", icon: <FiGrid /> },
+  { to: "/profile", label: "Profile", icon: <FiUser /> },
+  { to: "/settings", label: "Settings", icon: <FiSettings /> },
 ];
 
 export default function AppSidebar({ user, onNavigate }) {
@@ -65,7 +64,7 @@ export default function AppSidebar({ user, onNavigate }) {
       <nav className="flex-1 space-y-6 overflow-y-auto px-3 py-4">
         <div>
           <Link href="/dashboard" className={linkCls("/dashboard")} onClick={onNavigate}>
-            <FaThLarge /> Dashboard
+            <FiHome /> Dashboard
           </Link>
         </div>
 
@@ -90,23 +89,25 @@ export default function AppSidebar({ user, onNavigate }) {
             ))}
             {user?.role === "admin" && (
               <Link href="/admin/dashboard" className={linkCls("/admin/dashboard")} onClick={onNavigate}>
-                <FaUserCircle /> Admin Panel
+                <FiShield /> Admin Panel
               </Link>
             )}
           </div>
         </div>
 
         {/* Upgrade card */}
-        <div className="mx-2 rounded-2xl bg-gradient-to-br from-violet-600 to-fuchsia-600 p-5 text-white shadow-lg shadow-violet-600/25">
-          <FaCrown className="text-xl text-amber-300" />
-          <p className="mt-2.5 font-display font-bold">Upgrade to Pro</p>
-          <p className="mt-1 text-xs leading-relaxed text-violet-100">
+        <div className="mx-2 rounded-2xl border border-line bg-soft p-5">
+          <span className="flex h-10 w-10 items-center justify-center rounded-full bg-amber-500/15 text-lg text-amber-500">
+            <FaCrown />
+          </span>
+          <p className="mt-3 font-display font-bold t-text">Upgrade to Pro</p>
+          <p className="mt-1 text-xs leading-relaxed t-muted">
             Unlock higher limits, faster generation.
           </p>
           <Link
             href="/pricing"
             onClick={onNavigate}
-            className="mt-4 inline-flex items-center gap-1.5 rounded-lg bg-white/95 px-3.5 py-2 text-xs font-bold text-violet-700 transition-transform hover:-translate-y-0.5"
+            className="mt-3.5 inline-flex items-center gap-1.5 text-sm font-bold text-[var(--primary)] hover:underline"
           >
             Upgrade Now →
           </Link>

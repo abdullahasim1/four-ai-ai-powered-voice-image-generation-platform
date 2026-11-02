@@ -7,18 +7,14 @@ import { AnimatePresence, motion } from "framer-motion";
 import {
   FaArrowRight,
   FaChevronDown,
-  FaClosedCaptioning,
   FaCog,
   FaHistory,
-  FaImage,
-  FaMicrophoneAlt,
   FaSignOutAlt,
-  FaSlidersH,
   FaThLarge,
   FaUser,
   FaUserCircle,
-  FaVolumeUp,
 } from "react-icons/fa";
+import { FiFileText, FiImage, FiMic, FiSliders, FiVolume2 } from "react-icons/fi";
 import { clearSession, getSession } from "@/lib/auth-client";
 import { authApi } from "@/lib/api";
 import ThemeToggle from "@/components/ThemeToggle";
@@ -32,11 +28,11 @@ const NAV_LINKS = [
 ];
 
 const AI_TOOLS = [
-  { to: "/voice-generator", label: "Voice Generator", icon: <FaMicrophoneAlt /> },
-  { to: "/text-to-speech", label: "Text to Speech", icon: <FaVolumeUp /> },
-  { to: "/speech-to-text", label: "Speech to Text", icon: <FaClosedCaptioning /> },
-  { to: "/voicechanger", label: "Voice Changer", icon: <FaSlidersH /> },
-  { to: "/imagegenerator", label: "Image Generator", icon: <FaImage /> },
+  { to: "/voice-generator", label: "Voice Generator", icon: <FiMic /> },
+  { to: "/text-to-speech", label: "Text to Speech", icon: <FiVolume2 /> },
+  { to: "/speech-to-text", label: "Speech to Text", icon: <FiFileText /> },
+  { to: "/voicechanger", label: "Voice Changer", icon: <FiSliders /> },
+  { to: "/imagegenerator", label: "Image Generator", icon: <FiImage /> },
 ];
 
 const DROPDOWN_ITEM =

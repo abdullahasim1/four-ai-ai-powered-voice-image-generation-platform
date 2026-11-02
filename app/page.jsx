@@ -2,20 +2,18 @@
 
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
+import { FaArrowRight, FaCheckCircle, FaPlay } from "react-icons/fa";
 import {
-  FaArrowRight,
-  FaBolt,
-  FaCheckCircle,
-  FaClosedCaptioning,
-  FaImage,
-  FaInfinity,
-  FaMicrophoneAlt,
-  FaPlay,
-  FaSlidersH,
-  FaStar,
-  FaUsers,
-  FaVolumeUp,
-} from "react-icons/fa";
+  FiFileText,
+  FiImage,
+  FiLayers,
+  FiMic,
+  FiSliders,
+  FiStar,
+  FiUsers,
+  FiVolume2,
+  FiZap,
+} from "react-icons/fi";
 import Link from "next/link";
 
 import Navbar from "@/components/Navbar";
@@ -24,25 +22,25 @@ import { getSession } from "@/lib/auth-client";
 
 const TOOLS = [
   {
-    icon: <FaMicrophoneAlt className="text-xl" />,
+    icon: <FiMic className="text-xl" />,
     title: "Voice Generator",
     text: "Create realistic AI voices in multiple accents.",
     to: "/voice-generator",
   },
   {
-    icon: <FaVolumeUp className="text-xl" />,
+    icon: <FiVolume2 className="text-xl" />,
     title: "Text to Speech",
     text: "Convert text into natural-sounding speech.",
     to: "/text-to-speech",
   },
   {
-    icon: <FaSlidersH className="text-xl" />,
+    icon: <FiSliders className="text-xl" />,
     title: "Voice Changer",
     text: "Transform your voice with AI effects.",
     to: "/voicechanger",
   },
   {
-    icon: <FaImage className="text-xl" />,
+    icon: <FiImage className="text-xl" />,
     title: "Image Generator",
     text: "Generate stunning images from text using AI.",
     to: "/imagegenerator",
@@ -50,10 +48,10 @@ const TOOLS = [
 ];
 
 const STATS = [
-  { icon: <FaUsers />, value: "10K+", label: "Creations" },
-  { icon: <FaBolt />, value: "99.9%", label: "Uptime" },
-  { icon: <FaStar />, value: "4.8/5", label: "User Rating" },
-  { icon: <FaInfinity />, value: "All-in-One", label: "AI Platform" },
+  { icon: <FiUsers />, value: "10K+", label: "Creations" },
+  { icon: <FiZap />, value: "99.9%", label: "Uptime" },
+  { icon: <FiStar />, value: "4.8/5", label: "User Rating" },
+  { icon: <FiLayers />, value: "All-in-One", label: "AI Platform" },
 ];
 
 const WAVE_HEIGHTS = [10, 18, 26, 14, 30, 22, 34, 18, 28, 12, 24, 32, 16, 26, 20, 30, 14, 22, 28, 18];
@@ -144,7 +142,7 @@ export default function Startpage() {
               {/* Mic card */}
               <div className="glass-card absolute left-[16%] top-[2%] flex h-40 w-40 flex-col items-center justify-center !rounded-[2rem]">
                 <span className="flex h-20 w-20 items-center justify-center rounded-full bg-gradient-to-br from-violet-600 to-fuchsia-500 text-3xl text-white shadow-xl shadow-violet-500/30">
-                  <FaMicrophoneAlt />
+                  <FiMic />
                 </span>
                 <span className="mt-3 text-xs font-semibold t-muted">AI Voice</span>
               </div>
@@ -167,12 +165,12 @@ export default function Startpage() {
               <div className="glass-card absolute bottom-[6%] right-0 w-60 overflow-hidden !rounded-3xl p-2">
                 <SceneArt className="h-36 w-full rounded-2xl object-cover" />
                 <p className="flex items-center gap-2 px-2 py-2 text-xs font-semibold t-2">
-                  <FaImage className="text-[var(--primary)]" /> Text to Image
+                  <FiImage className="text-[var(--primary)]" /> Text to Image
                 </p>
               </div>
               {/* Sliders chip */}
               <div className="glass-card absolute bottom-[38%] left-[6%] flex items-center gap-2.5 !rounded-2xl px-4 py-3">
-                <FaSlidersH className="text-[var(--primary)]" />
+                <FiSliders className="text-[var(--primary)]" />
                 <span className="space-y-1.5">
                   <span className="block h-1.5 w-20 rounded-full bg-[var(--surface-3)]">
                     <span className="block h-full w-3/4 rounded-full bg-gradient-to-r from-violet-600 to-fuchsia-500" />
@@ -213,7 +211,7 @@ export default function Startpage() {
               className="glass-card card-hover mt-5 flex flex-wrap items-center gap-4 p-5"
             >
               <span className="inline-flex rounded-2xl bg-[var(--primary-soft)] p-3.5 text-[var(--primary)]">
-                <FaClosedCaptioning className="text-xl" />
+                <FiFileText className="text-xl" />
               </span>
               <span className="min-w-0 flex-1">
                 <span className="block font-display text-lg font-bold t-text">Speech to Text</span>

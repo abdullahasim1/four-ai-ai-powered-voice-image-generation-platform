@@ -1,7 +1,8 @@
 "use client";
 
 import { useRef, useState } from "react";
-import { FaCloudUploadAlt, FaDownload, FaMagic, FaWaveSquare } from "react-icons/fa";
+import { FaCloudUploadAlt, FaDownload, FaMagic } from "react-icons/fa";
+import { FiSliders } from "react-icons/fi";
 
 import { ToolHeader } from "@/components/PageShell";
 import { toast } from "@/lib/toast";
@@ -185,13 +186,15 @@ export default function VoiceChanger() {
   return (
     <div className="mx-auto max-w-6xl px-4 py-8 sm:px-6">
       <ToolHeader
-        icon={<FaWaveSquare />}
+        icon={<FiSliders />}
         title="Voice Changer"
         subtitle="Transform your voice with AI-powered effects."
       />
 
-      <div className="mx-auto max-w-2xl">
+      <div className="mx-auto max-w-4xl">
         <div className="glass-card p-6 md:p-8">
+          <div className="grid items-start gap-6 md:grid-cols-[minmax(0,1fr)_280px]">
+          <div>
           {/* File picker */}
           <label className="group flex cursor-pointer flex-col items-center justify-center gap-2 rounded-2xl border-2 border-dashed border-[var(--border-strong)] bg-soft px-6 py-10 text-center transition-colors hover:border-[var(--primary)]">
             <span className="flex h-14 w-14 items-center justify-center rounded-full bg-gradient-to-br from-violet-600 to-fuchsia-500 text-xl text-white shadow-lg shadow-violet-500/30 transition-transform group-hover:scale-110">
@@ -210,8 +213,10 @@ export default function VoiceChanger() {
               Duration: {Math.floor(fileDuration / 60)}:{(fileDuration % 60).toFixed(1).padStart(4, "0")}
             </p>
           )}
+          </div>
 
-          <div className="mt-6 grid gap-5 sm:grid-cols-2">
+          <div>
+          <div className="space-y-5">
             {/* Effect */}
             <div>
               <label className="input-label"><FaMagic /> Change To</label>
@@ -243,7 +248,7 @@ export default function VoiceChanger() {
             </div>
           </div>
 
-          <button onClick={handleApplyEffect} disabled={processing} className="btn-primary mt-7 w-full justify-center !py-3">
+          <button onClick={handleApplyEffect} disabled={processing} className="btn-primary mt-6 w-full justify-center !py-3">
             {processing ? (
               <>
                 <span className="h-4 w-4 animate-spin rounded-full border-2 border-white/30 border-t-white" />
@@ -255,6 +260,8 @@ export default function VoiceChanger() {
               </>
             )}
           </button>
+          </div>
+          </div>
 
           {/* Result */}
           {audioUrl && (

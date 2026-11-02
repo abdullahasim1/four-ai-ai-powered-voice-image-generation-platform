@@ -2,12 +2,12 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import {
-  FaClosedCaptioning,
   FaCopy,
   FaDownload,
   FaMicrophone,
   FaTrashAlt,
 } from "react-icons/fa";
+import { FiFileText } from "react-icons/fi";
 
 import { ToolHeader } from "@/components/PageShell";
 import { toast } from "@/lib/toast";
@@ -140,7 +140,7 @@ export default function SpeechToText() {
   return (
     <div className="mx-auto max-w-6xl px-4 py-8 sm:px-6">
       <ToolHeader
-        icon={<FaClosedCaptioning />}
+        icon={<FiFileText />}
         title="Speech to Text"
         subtitle="Speak naturally and watch your words appear in real time."
       />

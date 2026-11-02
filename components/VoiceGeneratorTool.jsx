@@ -78,10 +78,10 @@ export function VoiceGeneratorTool({ initialText }) {
   };
 
   return (
-    <div>
-      <div className="grid items-start gap-6 lg:grid-cols-[minmax(0,1fr)_320px]">
-        {/* Script card */}
-        <div className="glass-card p-6">
+    <div className="glass-card overflow-hidden">
+      <div className="grid lg:grid-cols-[minmax(0,1fr)_320px]">
+        {/* Script area */}
+        <div className="p-6">
           <textarea
             value={text}
             onChange={(e) => setText(e.target.value.slice(0, MAX_CHARS))}
@@ -121,7 +121,7 @@ export function VoiceGeneratorTool({ initialText }) {
         </div>
 
         {/* Controls panel */}
-        <div className="glass-card space-y-5 p-6">
+        <div className="space-y-5 border-t border-line p-6 lg:border-l lg:border-t-0">
           {/* Voice selector */}
           <div className="relative">
             <label className="input-label">Voice</label>
@@ -215,7 +215,7 @@ export function VoiceGeneratorTool({ initialText }) {
       </div>
 
       {/* Presets */}
-      <div className="mt-6 flex flex-wrap items-center gap-3">
+      <div className="flex flex-wrap items-center gap-3 border-t border-line px-6 py-4">
         <span className="text-xs font-semibold uppercase tracking-wider t-faint">Quick starts</span>
         {PRESETS.map((preset) => (
           <button

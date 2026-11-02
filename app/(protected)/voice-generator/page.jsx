@@ -2,7 +2,7 @@
 
 import { Suspense } from "react";
 import { useSearchParams } from "next/navigation";
-import { FaMicrophoneAlt } from "react-icons/fa";
+import { FiMic } from "react-icons/fi";
 
 import { ToolHeader } from "@/components/PageShell";
 import { VoiceGeneratorTool } from "@/components/VoiceGeneratorTool";
@@ -14,7 +14,7 @@ function VoiceGeneratorContent() {
   return (
     <div className="mx-auto max-w-6xl px-4 py-8 sm:px-6">
       <ToolHeader
-        icon={<FaMicrophoneAlt />}
+        icon={<FiMic />}
         title="Voice Generator"
         subtitle="Create realistic AI voices with different styles and accents."
       />

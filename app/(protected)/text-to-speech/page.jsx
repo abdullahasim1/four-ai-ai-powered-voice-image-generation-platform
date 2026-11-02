@@ -13,6 +13,7 @@ import {
   FaUser,
   FaVolumeUp,
 } from "react-icons/fa";
+import { FiVolume2 } from "react-icons/fi";
 
 import { ToolHeader } from "@/components/PageShell";
 import { toast } from "@/lib/toast";
@@ -97,14 +98,15 @@ function TextToSpeechContent() {
   return (
     <div className="mx-auto max-w-6xl px-4 py-8 sm:px-6">
       <ToolHeader
-        icon={<FaVolumeUp />}
+        icon={<FiVolume2 />}
         title="Text to Speech"
         subtitle="Convert any text into natural-sounding speech."
       />
 
-      <div className="grid items-start gap-6 lg:grid-cols-[minmax(0,1fr)_320px]">
-        {/* Text card */}
-        <div className="glass-card p-6">
+      <div className="glass-card overflow-hidden">
+      <div className="grid lg:grid-cols-[minmax(0,1fr)_320px]">
+        {/* Text area */}
+        <div className="p-6">
           <textarea
             value={text}
             onChange={(e) => setText(e.target.value.slice(0, MAX_CHARS))}
@@ -141,7 +143,7 @@ function TextToSpeechContent() {
         </div>
 
         {/* Controls panel */}
-        <div className="glass-card space-y-5 p-6">
+        <div className="space-y-5 border-t border-line p-6 lg:border-l lg:border-t-0">
           <div>
             <label className="input-label"><FaLanguage /> Language</label>
             <select
@@ -209,6 +211,7 @@ function TextToSpeechContent() {
             </button>
           </div>
         </div>
+      </div>
       </div>
 
       {/* Voice gallery */}
