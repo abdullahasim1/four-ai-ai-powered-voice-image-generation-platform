@@ -1,22 +1,21 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { Suspense, useEffect, useMemo, useState } from "react";
+import { useSearchParams } from "next/navigation";
 import {
   FaBookOpen,
   FaCommentDots,
   FaDownload,
-  FaHeadphones,
   FaLanguage,
   FaMicrophoneAlt,
   FaPlay,
   FaStop,
   FaUser,
   FaVolumeUp,
-  FaWaveSquare,
 } from "react-icons/fa";
+import { FiVolume2 } from "react-icons/fi";
 
-import PageShell, { PageHeader } from "@/components/PageShell";
-import FloatingIcons from "@/components/FloatingIcons";
+import { ToolHeader } from "@/components/PageShell";
 import { toast } from "@/lib/toast";
 import useSpeech from "@/lib/useSpeech";
 import { accountApi } from "@/lib/api";
@@ -24,18 +23,26 @@ import { accountApi } from "@/lib/api";
 const MAX_CHARS = 5000;
 
 const PRESETS = [
-  { name: "Document narration", icon: <FaBookOpen className="text-indigo-300" />, text: "Chapter one. In the beginning, the universe was neither quiet nor empty — it hummed with possibility." },
-  { name: "Video voiceover", icon: <FaVolumeUp className="text-fuchsia-300" />, text: "What if I told you that everything you know about productivity is wrong? Stay with me — this changes everything." },
-  { name: "Podcast intro", icon: <FaMicrophoneAlt className="text-violet-300" />, text: "You're listening to Deep Signals, the show where we decode the technology shaping tomorrow. Let's get into it." },
-  { name: "Casual message", icon: <FaCommentDots className="text-sky-300" />, text: "Hey! Just checking in — let me know when you're free to catch up this week." },
+  { name: "Document narration", icon: <FaBookOpen className="text-violet-500" />, text: "Chapter one. In the beginning, the universe was neither quiet nor empty — it hummed with possibility." },
+  { name: "Video voiceover", icon: <FaVolumeUp className="text-fuchsia-500" />, text: "What if I told you that everything you know about productivity is wrong? Stay with me — this changes everything." },
+  { name: "Podcast intro", icon: <FaMicrophoneAlt className="text-violet-500" />, text: "You're listening to Deep Signals, the show where we decode the technology shaping tomorrow. Let's get into it." },
+  { name: "Casual message", icon: <FaCommentDots className="text-sky-500" />, text: "Hey! Just checking in — let me know when you're free to catch up this week." },
 ];
 
-export default function TextToSpeech() {
+function TextToSpeechContent() {
+  const searchParams = useSearchParams();
   const [text, setText] = useState("");
   const [selectedVoice, setSelectedVoice] = useState(null);
   const [selectedLanguage, setSelectedLanguage] = useState("en-US");
   const [speed, setSpeed] = useState(1);
   const { voices, isSpeaking, speak, pause, resume, stop } = useSpeech();
+
+  // Seed from a template link (?text=…)
+  useEffect(() => {
+    const seed = searchParams.get("text");
+    if (seed) setText(seed.slice(0, MAX_CHARS));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const languages = useMemo(
     () => [...new Set(voices.map((v) => v.lang))].sort(),
@@ -89,65 +96,86 @@ export default function TextToSpeech() {
   };
 
   return (
-    <PageShell
-      icons={<FloatingIcons icons={[<FaWaveSquare key="1" />, <FaHeadphones key="2" />, <FaVolumeUp key="3" />]} count={7} />}
-      contentClassName="mx-auto max-w-5xl px-4 py-12"
-    >
-      <PageHeader
-        icon={<FaWaveSquare className="gradient-text" />}
+    <div className="mx-auto max-w-6xl px-4 py-8 sm:px-6">
+      <ToolHeader
+        icon={<FiVolume2 />}
         title="Text to Speech"
-        subtitle="Convert any text into natural speech with full control over voice, language and speed."
+        subtitle="Convert any text into natural-sounding speech."
       />
 
-      <div className="glass-card p-6 md:p-8">
+      <div className="glass-card overflow-hidden">
+      <div className="grid lg:grid-cols-[minmax(0,1fr)_320px]">
         {/* Text area */}
-        <label className="input-label"><FaBookOpen /> Your text</label>
-        <textarea
-          value={text}
-          onChange={(e) => setText(e.target.value.slice(0, MAX_CHARS))}
-          rows={6}
-          placeholder="Paste an article, write a script, or type a quick note…"
-          className="input-field resize-none !bg-black/30 leading-relaxed"
-        />
-        <div className="mt-2 flex justify-between text-xs">
-          <span className="text-slate-500">Supports long-form scripts</span>
-          <span className={text.length >= MAX_CHARS ? "text-rose-400" : "text-slate-500"}>
-            {text.length}/{MAX_CHARS}
-          </span>
+        <div className="p-6">
+          <textarea
+            value={text}
+            onChange={(e) => setText(e.target.value.slice(0, MAX_CHARS))}
+            rows={9}
+            placeholder="Enter your text here…"
+            className="input-field resize-none leading-relaxed"
+          />
+          <div className="mt-2 flex justify-between text-xs t-faint">
+            <span>Supports long-form scripts</span>
+            <span className={text.length >= MAX_CHARS ? "font-semibold text-rose-500" : ""}>
+              {text.length} / {MAX_CHARS}
+            </span>
+          </div>
+
+          {/* Presets */}
+          <div className="mt-6 border-t border-line pt-5">
+            <p className="mb-3 text-xs font-semibold uppercase tracking-wider t-faint">Use-case presets</p>
+            <div className="flex flex-wrap gap-2.5">
+              {PRESETS.map((preset) => (
+                <button
+                  key={preset.name}
+                  onClick={() => {
+                    setText(preset.text);
+                    toast.info(`"${preset.name}" loaded`);
+                  }}
+                  className="inline-flex items-center gap-2 rounded-full border border-line bg-surface px-4 py-2 text-sm t-2 transition-all hover:border-[var(--primary-soft-border)] hover:text-[var(--primary)]"
+                >
+                  {preset.icon}
+                  {preset.name}
+                </button>
+              ))}
+            </div>
+          </div>
         </div>
 
-        {/* Control bar */}
-        <div className="mt-6 flex flex-wrap items-center gap-4 border-t border-white/5 pt-6">
-          <div className="flex items-center gap-2">
-            <FaLanguage className="text-lg text-indigo-300" />
+        {/* Controls panel */}
+        <div className="space-y-5 border-t border-line p-6 lg:border-l lg:border-t-0">
+          <div>
+            <label className="input-label"><FaLanguage /> Language</label>
             <select
               value={selectedLanguage}
               onChange={(e) => handleLanguageChange(e.target.value)}
-              className="input-field !w-auto !py-2"
+              className="input-field"
             >
               {languages.map((lang) => (
-                <option key={lang} value={lang} className="bg-slate-900">{lang}</option>
+                <option key={lang} value={lang}>{lang}</option>
               ))}
             </select>
           </div>
 
-          <div className="flex items-center gap-2">
-            <FaUser className="text-lg text-violet-300" />
+          <div>
+            <label className="input-label"><FaUser /> Voice</label>
             <select
               value={selectedVoice?.name || ""}
               onChange={(e) => setSelectedVoice(voices.find((v) => v.name === e.target.value))}
-              className="input-field !w-auto max-w-[220px] !py-2"
+              className="input-field"
             >
               {(filteredVoices.length ? filteredVoices : voices).map((voice) => (
-                <option key={voice.name} value={voice.name} className="bg-slate-900">
+                <option key={voice.name} value={voice.name}>
                   {voice.name} ({voice.lang})
                 </option>
               ))}
             </select>
           </div>
 
-          <label className="flex items-center gap-2 text-sm text-slate-400">
-            Speed
+          <div>
+            <label className="input-label">
+              Speed <span className="ml-auto font-semibold t-text">{speed.toFixed(1)}x</span>
+            </label>
             <input
               type="range"
               min="0.5"
@@ -155,61 +183,61 @@ export default function TextToSpeech() {
               step="0.1"
               value={speed}
               onChange={(e) => setSpeed(parseFloat(e.target.value))}
-              className="w-28 accent-indigo-500"
+              className="w-full"
             />
-            <span className="w-8 tabular-nums">{speed.toFixed(1)}x</span>
-          </label>
+          </div>
 
-          <div className="ml-auto flex items-center gap-2">
-            <button onClick={stop} disabled={!isSpeaking} className="btn-secondary !px-3 !py-2.5" title="Stop">
+          <div className="flex gap-2.5 pt-1">
+            <button onClick={handlePlayPause} className="btn-primary flex-1 justify-center" disabled={!text.trim()}>
+              {isSpeaking ? (
+                <>
+                  <FaStop className="rotate-90 text-xs" /> Pause
+                </>
+              ) : (
+                <>
+                  Convert to Speech <FaPlay className="text-xs" />
+                </>
+              )}
+            </button>
+            <button onClick={stop} disabled={!isSpeaking} className="btn-secondary !px-3.5" title="Stop">
               <FaStop />
             </button>
             <button
               onClick={handleDownload}
-              className="btn-secondary !px-3 !py-2.5"
+              className="btn-secondary !px-3.5"
               title="Export audio"
             >
               <FaDownload />
             </button>
-            <button onClick={handlePlayPause} className="btn-primary" disabled={!text.trim()}>
-              {isSpeaking ? (
-                <>
-                  <FaStop className="rotate-90" /> Pause
-                </>
-              ) : (
-                <>
-                  <FaPlay /> Play
-                </>
-              )}
-            </button>
           </div>
         </div>
       </div>
+      </div>
 
       {/* Voice gallery */}
-      <h3 className="mt-10 mb-4 flex items-center gap-2 font-display text-lg font-semibold text-white">
-        <FaMicrophoneAlt className="text-indigo-300" /> Available voices
+      <h3 className="mb-4 mt-10 flex items-center gap-2 font-display text-lg font-bold t-text">
+        <FaMicrophoneAlt className="text-[var(--primary)]" /> Available voices
       </h3>
       {voices.length === 0 ? (
-        <p className="glass-card p-6 text-center text-sm text-slate-400">
+        <p className="glass-card p-6 text-center text-sm t-muted">
           No system voices detected yet — try reloading the page.
         </p>
       ) : (
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
           {(filteredVoices.length ? filteredVoices : voices).map((voice) => (
             <button
               key={voice.name + voice.lang}
               onClick={() => setSelectedVoice(voice)}
-              className={`glass-card group flex items-center gap-4 p-4 text-left transition-all hover:-translate-y-0.5 ${
-                selectedVoice?.name === voice.name ? "!border-indigo-400/50 !bg-indigo-500/10" : ""
+              className={`glass-card card-hover flex items-center gap-4 p-4 text-left ${
+                selectedVoice?.name === voice.name ? "!border-[var(--primary)] !bg-[var(--primary-soft)]" : ""
               }`}
             >
-              <span className="rounded-xl bg-gradient-to-br from-indigo-500/30 to-fuchsia-500/30 p-3 text-indigo-200">
-                <FaUser />
+              <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-violet-600 to-fuchsia-500 font-display text-sm font-bold text-white">
+                {voice.name.trim().charAt(0)}
               </span>
               <span className="min-w-0 flex-1">
-                <span className="block truncate font-semibold text-white">{voice.name}</span>
-                <span className="block text-xs text-slate-400">{voice.lang}{voice.default ? " · default" : ""}</span>
+                <span className="block truncate font-semibold t-text">{voice.name}</span>
+                <span className="block text-xs t-muted">{voice.lang}{voice.default ? " · default" : ""}</span>
               </span>
               <span
                 role="button"
@@ -220,7 +248,7 @@ export default function TextToSpeech() {
                   previewVoice(voice);
                 }}
                 onKeyDown={(e) => e.key === "Enter" && previewVoice(voice)}
-                className="rounded-full border border-white/10 bg-white/5 p-2.5 text-xs transition-all hover:border-indigo-400/40 hover:text-indigo-300"
+                className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-line bg-surface text-xs t-muted transition-all hover:border-[var(--primary-soft-border)] hover:text-[var(--primary)]"
               >
                 <FaPlay />
               </span>
@@ -228,24 +256,14 @@ export default function TextToSpeech() {
           ))}
         </div>
       )}
+    </div>
+  );
+}
 
-      {/* Presets */}
-      <h3 className="mt-10 mb-4 font-display text-lg font-semibold text-white">Use-case presets</h3>
-      <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
-        {PRESETS.map((preset) => (
-          <button
-            key={preset.name}
-            onClick={() => {
-              setText(preset.text);
-              toast.info(`"${preset.name}" loaded`);
-            }}
-            className="glass-card flex flex-col items-center gap-2 p-5 text-center transition-all hover:-translate-y-1 hover:border-indigo-400/30"
-          >
-            <span className="text-xl">{preset.icon}</span>
-            <span className="text-sm font-medium text-slate-200">{preset.name}</span>
-          </button>
-        ))}
-      </div>
-    </PageShell>
+export default function TextToSpeech() {
+  return (
+    <Suspense fallback={<div className="mx-auto max-w-6xl px-4 py-8 sm:px-6" />}>
+      <TextToSpeechContent />
+    </Suspense>
   );
 }

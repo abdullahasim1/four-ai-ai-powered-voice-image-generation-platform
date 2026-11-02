@@ -75,13 +75,13 @@ export default function Home() {
         </motion.span>
         <motion.h1
           {...fadeUp(0.1)}
-          className="mx-auto mt-5 max-w-3xl font-display text-4xl font-extrabold leading-tight tracking-tight text-white sm:text-6xl"
+          className="mx-auto mt-5 max-w-3xl font-display text-4xl font-extrabold leading-tight tracking-tight t-text sm:text-6xl"
         >
           Welcome to <span className="gradient-text">Four AI</span>
         </motion.h1>
         <motion.p
           {...fadeUp(0.2)}
-          className="mx-auto mt-5 max-w-2xl text-lg leading-relaxed text-slate-400"
+          className="mx-auto mt-5 max-w-2xl text-lg leading-relaxed t-muted"
         >
           Create, customize and generate voices and images with advanced AI — try the tools right below.
         </motion.p>
@@ -89,7 +89,7 @@ export default function Home() {
 
       {/* Live tool preview */}
       <motion.section {...fadeUp(0.1)} className="-mt-8 pb-20">
-        <div className="glass-card !rounded-3xl p-4 sm:p-6">
+        <div>
           <VoiceGeneratorTool />
         </div>
       </motion.section>
@@ -100,7 +100,7 @@ export default function Home() {
           <motion.div {...fadeUp()}>
             <span className="badge">Voice Library</span>
             <h2 className="mt-4 section-title !text-left">Discover signature voices</h2>
-            <p className="mt-4 leading-relaxed text-slate-400">
+            <p className="mt-4 leading-relaxed t-muted">
               A growing collection of professionally crafted voices. From natural and warm to bold
               and dramatic — find the perfect match for your project.
             </p>
@@ -113,17 +113,17 @@ export default function Home() {
           <div className="space-y-5">
             {VOICES.map((voice, i) => (
               <motion.div key={voice.title} {...fadeUp(i * 0.1)}>
-                <div className="glass-card flex items-start gap-5 p-6 transition-all hover:-translate-y-1 hover:border-indigo-400/25">
+                <div className="glass-card card-hover flex items-start gap-5 p-6">
                   <span className={`shrink-0 rounded-xl bg-gradient-to-br ${voice.gradient} p-3.5 text-white shadow-lg`}>
                     {voice.icon}
                   </span>
                   <div className="min-w-0">
-                    <h3 className="text-lg font-semibold text-white">{voice.title}</h3>
-                    <p className="mt-1 text-sm leading-relaxed text-slate-400">{voice.description}</p>
-                    <div className="mt-3 flex gap-5 text-xs text-slate-400">
-                      <span className="flex items-center gap-1.5"><FaHeadphones className="text-indigo-300" /> {voice.listens}</span>
-                      <span className="flex items-center gap-1.5"><FaUsers className="text-violet-300" /> {voice.users}</span>
-                      <span className="flex items-center gap-1.5"><FaStar className="text-amber-300" /> 4.9</span>
+                    <h3 className="text-lg font-semibold t-text">{voice.title}</h3>
+                    <p className="mt-1 text-sm leading-relaxed t-muted">{voice.description}</p>
+                    <div className="mt-3 flex gap-5 text-xs t-muted">
+                      <span className="flex items-center gap-1.5"><FaHeadphones className="text-violet-500" /> {voice.listens}</span>
+                      <span className="flex items-center gap-1.5"><FaUsers className="text-violet-500" /> {voice.users}</span>
+                      <span className="flex items-center gap-1.5"><FaStar className="text-amber-500" /> 4.9</span>
                     </div>
                   </div>
                 </div>
@@ -146,12 +146,12 @@ export default function Home() {
         <div className="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3">
           {FEATURES.map((feature, i) => (
             <motion.div key={feature.title} {...fadeUp(i * 0.06)}>
-              <div className="glass-card h-full p-6 transition-all hover:-translate-y-1 hover:border-indigo-400/25">
+              <div className="glass-card card-hover h-full p-6">
                 <span className={`inline-flex rounded-xl bg-gradient-to-br ${feature.gradient} p-3 text-white shadow-lg`}>
                   {feature.icon}
                 </span>
-                <h3 className="mt-4 font-semibold text-white">{feature.title}</h3>
-                <p className="mt-1.5 text-sm leading-relaxed text-slate-400">{feature.text}</p>
+                <h3 className="mt-4 font-semibold t-text">{feature.title}</h3>
+                <p className="mt-1.5 text-sm leading-relaxed t-muted">{feature.text}</p>
               </div>
             </motion.div>
           ))}
@@ -160,12 +160,12 @@ export default function Home() {
 
       {/* CTA */}
       <motion.section {...fadeUp()} className="py-16">
-        <div className="relative overflow-hidden rounded-3xl border border-white/10 bg-gradient-to-br from-indigo-600/25 via-violet-600/20 to-fuchsia-600/25 p-10 text-center backdrop-blur-xl sm:p-16">
-          <div aria-hidden="true" className="absolute inset-0 bg-gradient-to-t from-transparent via-transparent to-white/[0.03]" />
+        <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-violet-700 via-purple-600 to-fuchsia-600 p-10 text-center shadow-2xl shadow-violet-600/25 sm:p-16">
+          
           <h2 className="relative font-display text-3xl font-bold text-white sm:text-4xl">
             Ready to transform your ideas?
           </h2>
-          <p className="relative mx-auto mt-4 max-w-xl text-slate-300">
+          <p className="relative mx-auto mt-4 max-w-xl text-violet-100">
             Join creators using Four AI to bring their stories, videos and artwork to life.
           </p>
           <div className="relative mt-8 flex flex-col justify-center gap-4 sm:flex-row">
@@ -178,7 +178,7 @@ export default function Home() {
                 Start creating now <FaArrowRight className="transition-transform group-hover:translate-x-1" />
               </Link>
             )}
-            <Link href="/pricing" className="btn-secondary">
+            <Link href="/pricing" className="inline-flex items-center justify-center gap-2 rounded-xl bg-white/15 px-6 py-3 font-semibold text-white backdrop-blur transition-colors hover:bg-white/25">
               View pricing
             </Link>
           </div>

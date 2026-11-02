@@ -4,15 +4,12 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import {
   FaCopy,
   FaDownload,
-  FaGlobe,
   FaMicrophone,
-  FaStopCircle,
   FaTrashAlt,
-  FaWaveSquare,
 } from "react-icons/fa";
+import { FiFileText } from "react-icons/fi";
 
-import PageShell, { PageHeader } from "@/components/PageShell";
-import FloatingIcons from "@/components/FloatingIcons";
+import { ToolHeader } from "@/components/PageShell";
 import { toast } from "@/lib/toast";
 import { accountApi } from "@/lib/api";
 
@@ -141,34 +138,31 @@ export default function SpeechToText() {
   };
 
   return (
-    <PageShell
-      icons={<FloatingIcons icons={[<FaMicrophone key="1" />, <FaWaveSquare key="2" />, <FaGlobe key="3" />]} count={8} />}
-      contentClassName="mx-auto max-w-4xl px-4 py-16 sm:px-6"
-    >
-      <PageHeader
-        icon={<FaMicrophone className="gradient-text" />}
+    <div className="mx-auto max-w-6xl px-4 py-8 sm:px-6">
+      <ToolHeader
+        icon={<FiFileText />}
         title="Speech to Text"
         subtitle="Speak naturally and watch your words appear in real time."
       />
 
       {!supported ? (
-        <div className="glass-card p-10 text-center" data-reveal>
-          <FaMicrophone className="mx-auto mb-4 text-5xl text-indigo-400/40" />
-          <h3 className="font-display text-lg font-semibold text-white">Browser not supported</h3>
-          <p className="mx-auto mt-2 max-w-md text-sm leading-relaxed text-slate-400">
+        <div className="glass-card mx-auto max-w-2xl p-10 text-center">
+          <FaMicrophone className="mx-auto mb-4 text-5xl text-[var(--primary)] opacity-50" />
+          <h3 className="font-display text-lg font-bold t-text">Browser not supported</h3>
+          <p className="mx-auto mt-2 max-w-md text-sm leading-relaxed t-muted">
             Live speech recognition works in Chrome and Edge. Please open Four AI in one of those browsers to use this tool.
           </p>
         </div>
       ) : (
-        <>
+        <div className="mx-auto max-w-4xl">
           {/* Controls */}
-          <div className="glass-card mb-6 flex flex-col items-center gap-5 p-6 sm:flex-row sm:justify-between" data-reveal>
+          <div className="glass-card mb-6 flex flex-col items-center gap-5 p-6 sm:flex-row sm:justify-between">
             <button
               onClick={listening ? stop : start}
               className={`flex items-center justify-center gap-3 rounded-full px-8 py-4 font-display text-lg font-bold text-white shadow-xl transition-all ${
                 listening
                   ? "bg-gradient-to-r from-rose-500 to-red-500 shadow-rose-500/30 hover:brightness-110"
-                  : "bg-gradient-to-r from-indigo-500 to-fuchsia-500 shadow-indigo-500/30 hover:brightness-110"
+                  : "bg-gradient-to-r from-violet-600 to-fuchsia-500 shadow-violet-500/30 hover:brightness-110"
               }`}
             >
               {listening ? (
@@ -195,7 +189,7 @@ export default function SpeechToText() {
                 className="input-field !w-auto"
               >
                 {LANGUAGES.map((lang) => (
-                  <option key={lang.code} value={lang.code} className="bg-slate-900">
+                  <option key={lang.code} value={lang.code}>
                     {lang.label}
                   </option>
                 ))}
@@ -204,27 +198,27 @@ export default function SpeechToText() {
           </div>
 
           {/* Transcript */}
-          <div className="glass-card p-6" data-reveal>
+          <div className="glass-card p-6">
             <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
-              <h3 className="font-display text-lg font-semibold text-white">Live transcript</h3>
-              <div className="flex items-center gap-2 text-xs text-slate-400">
-                <span className="rounded-full bg-white/5 px-3 py-1">{wordCount} words</span>
-                <span className="rounded-full bg-white/5 px-3 py-1">{transcript.length} chars</span>
+              <h3 className="font-display text-lg font-bold t-text">Live transcript</h3>
+              <div className="flex items-center gap-2 text-xs t-muted">
+                <span className="rounded-full bg-soft px-3 py-1">{wordCount} words</span>
+                <span className="rounded-full bg-soft px-3 py-1">{transcript.length} chars</span>
               </div>
             </div>
 
-            <div className="min-h-[220px] max-h-[420px] overflow-y-auto whitespace-pre-wrap rounded-xl border border-white/10 bg-[#0a0f1e]/70 p-5 text-base leading-relaxed text-slate-200">
+            <div className="min-h-[220px] max-h-[420px] overflow-y-auto whitespace-pre-wrap rounded-xl border border-line bg-[var(--input-bg)] p-5 text-base leading-relaxed t-text">
               {transcript || interim ? (
                 <>
                   {transcript}
-                  {interim && <span className="text-slate-500"> {interim}</span>}
+                  {interim && <span className="t-faint"> {interim}</span>}
                 </>
               ) : (
-                <span className="text-slate-600">
+                <span className="t-faint">
                   Press “Start listening” and begin speaking — your words will appear here…
                 </span>
               )}
-              {listening && <span className="ml-1 inline-block h-5 w-[2px] animate-pulse bg-fuchsia-400 align-middle" />}
+              {listening && <span className="ml-1 inline-block h-5 w-[2px] animate-pulse bg-fuchsia-500 align-middle" />}
             </div>
 
             <div className="mt-5 flex flex-wrap gap-3">
@@ -239,8 +233,8 @@ export default function SpeechToText() {
               </button>
             </div>
           </div>
-        </>
+        </div>
       )}
-    </PageShell>
+    </div>
   );
 }

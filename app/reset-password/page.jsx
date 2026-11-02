@@ -55,8 +55,8 @@ function ResetPasswordForm() {
       transition={{ type: "spring", stiffness: 220, damping: 20 }}
       className="glass-card w-full max-w-md p-8"
     >
-      <h1 className="text-center font-display text-2xl font-bold text-white">Set a new password</h1>
-      <p className="mt-2 text-center text-sm text-slate-400">
+      <h1 className="text-center font-display text-2xl font-bold t-text">Set a new password</h1>
+      <p className="mt-2 text-center text-sm t-muted">
         Choose a strong password for your account.
       </p>
 
@@ -90,7 +90,7 @@ function ResetPasswordForm() {
         </div>
 
         {error && (
-          <p className="rounded-lg border border-rose-500/30 bg-rose-500/10 px-3 py-2 text-center text-sm text-rose-300">
+          <p className="rounded-lg border border-rose-500/30 bg-rose-500/10 px-3 py-2 text-center text-sm text-rose-600 dark:text-rose-300">
             {error}
           </p>
         )}
@@ -99,8 +99,8 @@ function ResetPasswordForm() {
           {loading ? "Updating…" : "Update password"}
         </button>
 
-        <p className="text-center text-sm text-slate-400">
-          <Link href="/forgot-password" className="font-medium text-indigo-300 hover:text-indigo-200">
+        <p className="text-center text-sm t-muted">
+          <Link href="/forgot-password" className="font-medium text-[var(--primary)] hover:underline">
             Request a new reset link
           </Link>
         </p>
@@ -112,7 +112,7 @@ function ResetPasswordForm() {
 export default function ResetPasswordPage() {
   return (
     <PageShell contentClassName="flex min-h-screen items-center justify-center px-4 py-16">
-      <Suspense fallback={<span className="text-slate-400">Loading…</span>}>
+      <Suspense fallback={<span className="t-muted">Loading…</span>}>
         <ResetPasswordForm />
       </Suspense>
     </PageShell>

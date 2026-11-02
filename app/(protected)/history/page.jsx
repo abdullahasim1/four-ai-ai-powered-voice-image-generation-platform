@@ -1,24 +1,21 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import {
-  FaCalendarAlt,
-  FaHistory,
-  FaImage,
-  FaMicrophone,
-  FaRobot,
-  FaWaveSquare,
-} from "react-icons/fa";
+import { Suspense, useEffect, useMemo, useState } from "react";
+import { useSearchParams } from "next/navigation";
+import { FaSearch } from "react-icons/fa";
+import { FiClock, FiFileText, FiImage, FiMic, FiSliders, FiVolume2 } from "react-icons/fi";
 
-import PageShell, { PageHeader } from "@/components/PageShell";
+import { ToolHeader } from "@/components/PageShell";
 import { toast } from "@/lib/toast";
 import { accountApi } from "@/lib/api";
 
 const FEATURE_META = {
-  "text-to-speech": { label: "Text to Speech", icon: <FaMicrophone className="text-sky-300" /> },
-  "voice-generator": { label: "Voice Generator", icon: <FaRobot className="text-violet-300" /> },
-  "voice-changer": { label: "Voice Changer", icon: <FaWaveSquare className="text-fuchsia-300" /> },
-  "image-generator": { label: "Image Generator", icon: <FaImage className="text-emerald-300" /> },
+  "text-to-speech": { label: "Text to Speech", icon: <FiVolume2 />, group: "voice" },
+  "voice-generator": { label: "Voice Generator", icon: <FiMic />, group: "voice" },
+  "speech-to-text": { label: "Speech to Text", icon: <FiFileText />, group: "voice" },
+  "voice-changer": { label: "Voice Changer", icon: <FiSliders />, group: "voice" },
+  "image-generator": { label: "Image Generator", icon: <FiImage />, group: "image" },
+  image: { label: "Image Generator", icon: <FiImage />, group: "image" },
 };
 
 const formatDate = (iso) =>
@@ -30,16 +27,23 @@ const formatDate = (iso) =>
     minute: "2-digit",
   });
 
-export default function History() {
+function HistoryContent() {
+  const searchParams = useSearchParams();
   const [history, setHistory] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [tab, setTab] = useState("all");
+  const [query, setQuery] = useState("");
+
+  useEffect(() => {
+    setQuery(searchParams.get("q") || "");
+  }, [searchParams]);
 
   useEffect(() => {
     let cancelled = false;
     accountApi
-      .getHistory(50)
-      .then(({ data }) => {
-        if (!cancelled && data.success) setHistory(data.history);
+      .getHistory(100)
+      .then((res) => {
+        if (!cancelled && res?.success) setHistory(res.history || []);
       })
       .catch(() => {
         if (!cancelled) toast.error("Couldn't load history. Please refresh to try again.");
@@ -52,60 +56,117 @@ export default function History() {
     };
   }, []);
 
+  const counts = useMemo(
+    () => ({
+      all: history.length,
+      voice: history.filter((h) => FEATURE_META[h.feature]?.group === "voice").length,
+      image: history.filter((h) => FEATURE_META[h.feature]?.group === "image").length,
+    }),
+    [history]
+  );
+
+  const visible = useMemo(() => {
+    const q = query.trim().toLowerCase();
+    return history.filter((item) => {
+      if (tab !== "all" && FEATURE_META[item.feature]?.group !== tab) return false;
+      if (!q) return true;
+      const meta = FEATURE_META[item.feature];
+      return (
+        (item.description || "").toLowerCase().includes(q) ||
+        (meta?.label || item.feature).toLowerCase().includes(q)
+      );
+    });
+  }, [history, tab, query]);
+
+  const TABS = [
+    { key: "all", label: `All (${counts.all})` },
+    { key: "voice", label: `Voice (${counts.voice})` },
+    { key: "image", label: `Images (${counts.image})` },
+  ];
+
   return (
-    <PageShell contentClassName="mx-auto max-w-3xl px-4 py-12">
-      <PageHeader
-        icon={<FaHistory className="gradient-text" />}
-        title="Usage History"
-        subtitle="Your last 50 generations and tool sessions, synced with your account."
+    <div className="mx-auto max-w-6xl px-4 py-8 sm:px-6">
+      <ToolHeader
+        icon={<FiClock />}
+        title="My Creations"
+        subtitle="Everything you've generated, synced with your account."
       />
+
+      {/* Tabs + search */}
+      <div className="mb-6 flex flex-wrap items-center gap-3">
+        <div className="flex gap-1.5">
+          {TABS.map((t) => (
+            <button
+              key={t.key}
+              onClick={() => setTab(t.key)}
+              className={`pill-tab ${tab === t.key ? "active" : "border-line bg-surface"}`}
+            >
+              {t.label}
+            </button>
+          ))}
+        </div>
+        <div className="relative ml-auto w-full sm:w-64">
+          <FaSearch className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-xs t-faint" />
+          <input
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            placeholder="Search…"
+            className="input-field !rounded-full !py-2.5 !pl-10 !text-sm"
+          />
+        </div>
+      </div>
 
       {loading ? (
         <div className="space-y-3">
           {[...Array(4)].map((_, i) => (
-            <div key={i} className="glass-card h-20 animate-pulse !bg-white/[0.04]" />
+            <div key={i} className="glass-card h-20 animate-pulse !bg-[var(--surface-2)]" />
           ))}
         </div>
       ) : history.length === 0 ? (
         <div className="glass-card p-10 text-center">
-          <FaHistory className="mx-auto mb-4 text-4xl text-indigo-400/40" />
-          <p className="font-medium text-slate-200">Nothing here yet</p>
-          <p className="mt-1 text-sm text-slate-400">
-            Start using the AI tools and your activity will appear here.
+          <FiClock className="mx-auto mb-4 text-4xl text-[var(--primary)] opacity-50" />
+          <p className="font-medium t-text">Nothing here yet</p>
+          <p className="mt-1 text-sm t-muted">
+            Start using the AI tools and your creations will appear here.
           </p>
         </div>
+      ) : visible.length === 0 ? (
+        <div className="glass-card p-10 text-center">
+          <p className="font-medium t-text">No matches</p>
+          <p className="mt-1 text-sm t-muted">Try a different search or filter.</p>
+        </div>
       ) : (
-        <ol className="relative space-y-3 border-l border-white/10 pl-6">
-          {history.map((item) => {
+        <div className="glass-card divide-y divide-line overflow-hidden">
+          {visible.map((item) => {
             const meta = FEATURE_META[item.feature] || {
               label: item.feature,
-              icon: <FaHistory className="text-slate-400" />,
+              icon: <FiClock />,
             };
             return (
-              <li key={item.id} className="relative">
-                <span className="absolute -left-[31px] top-5 flex h-5 w-5 items-center justify-center rounded-full border border-indigo-400/40 bg-[#0b1120] text-[10px] text-indigo-300">
-                  ●
+              <div key={item.id} className="flex items-center gap-4 px-5 py-4 transition-colors hover:bg-[var(--surface-2)]">
+                <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-[var(--primary-soft)] text-[var(--primary)]">
+                  {meta.icon}
                 </span>
-                <div className="glass-card flex flex-col gap-2 p-4 sm:flex-row sm:items-center sm:justify-between hover:border-indigo-400/25 transition-colors">
-                  <div className="flex items-center gap-3">
-                    <span className="rounded-lg bg-white/5 p-2.5">{meta.icon}</span>
-                    <div>
-                      <h3 className="text-sm font-semibold text-white">{meta.label}</h3>
-                      <p className="text-xs leading-relaxed text-slate-400">
-                        {item.description || "—"}
-                      </p>
-                    </div>
-                  </div>
-                  <span className="flex shrink-0 items-center gap-1.5 text-xs text-slate-500">
-                    <FaCalendarAlt />
-                    {formatDate(item.timestamp)}
-                  </span>
+                <div className="min-w-0 flex-1">
+                  <h3 className="truncate text-sm font-semibold t-text">
+                    {item.description || meta.label}
+                  </h3>
+                  <p className="text-xs t-muted">{meta.label}</p>
                 </div>
-              </li>
+                <span className="shrink-0 text-xs t-faint">{formatDate(item.timestamp)}</span>
+              </div>
             );
           })}
-        </ol>
+        </div>
       )}
-    </PageShell>
+    </div>
+  );
+}
+
+export default function History() {
+  return (
+    <Suspense fallback={<div className="mx-auto max-w-6xl px-4 py-8 sm:px-6" />}>
+      <HistoryContent />
+    </Suspense>
   );
 }
