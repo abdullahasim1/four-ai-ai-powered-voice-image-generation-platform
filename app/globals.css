@@ -138,20 +138,16 @@ body::after {
   width: 90vmax;
   height: 90vmax;
   border-radius: 50%;
-  will-change: transform;
-  backface-visibility: hidden;
 }
 body::before {
   left: -22vmax;
   top: -32vmax;
   background: radial-gradient(closest-side, rgba(124, 58, 237, 0.13), rgba(124, 58, 237, 0.04) 45%, transparent 72%);
-  animation: aurora-a 26s ease-in-out infinite;
 }
 body::after {
   right: -28vmax;
   bottom: -36vmax;
   background: radial-gradient(closest-side, rgba(192, 38, 211, 0.09), rgba(192, 38, 211, 0.03) 45%, transparent 72%);
-  animation: aurora-b 32s ease-in-out infinite;
 }
 .dark body::before {
   background: radial-gradient(closest-side, rgba(124, 58, 237, 0.2), rgba(124, 58, 237, 0.06) 45%, transparent 72%);

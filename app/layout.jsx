@@ -22,7 +22,7 @@ export const viewport = {
 };
 
 // Runs before first paint so the saved theme never flashes the wrong one.
-const THEME_INIT = `(function(){try{var t=localStorage.getItem("fourai-theme")||"system";var d=t==="dark"||(t==="system"&&window.matchMedia("(prefers-color-scheme: dark)").matches);if(d)document.documentElement.classList.add("dark");}catch(e){}})();`;
+const THEME_INIT = `(function(){try{var t=localStorage.getItem("fourai-theme")||"light";var d=t==="dark"||(t==="system"&&window.matchMedia("(prefers-color-scheme: dark)").matches);if(d)document.documentElement.classList.add("dark");}catch(e){}})();`;
 
 export default function RootLayout({ children }) {
   return (

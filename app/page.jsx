@@ -140,9 +140,9 @@ export default function Startpage() {
               className="relative mx-auto hidden aspect-[4/3] w-full max-w-[540px] sm:block"
               aria-hidden="true"
             >
-              <div className="absolute inset-6 rounded-[3rem] bg-gradient-to-br from-violet-400/30 via-fuchsia-300/20 to-violet-200/10 blur-2xl" />
+              <div className="absolute inset-6 rounded-[3rem] bg-gradient-to-br from-violet-400/25 via-fuchsia-300/15 to-violet-200/10" />
               {/* Mic card */}
-              <div className="glass-card floating-element absolute left-[16%] top-[2%] flex h-40 w-40 flex-col items-center justify-center !rounded-[2rem]">
+              <div className="glass-card absolute left-[16%] top-[2%] flex h-40 w-40 flex-col items-center justify-center !rounded-[2rem]">
                 <span className="flex h-20 w-20 items-center justify-center rounded-full bg-gradient-to-br from-violet-600 to-fuchsia-500 text-3xl text-white shadow-xl shadow-violet-500/30">
                   <FaMicrophoneAlt />
                 </span>
@@ -171,7 +171,7 @@ export default function Startpage() {
                 </p>
               </div>
               {/* Sliders chip */}
-              <div className="glass-card floating-element absolute bottom-[38%] left-[6%] flex items-center gap-2.5 !rounded-2xl px-4 py-3" style={{ animationDelay: "1.2s" }}>
+              <div className="glass-card absolute bottom-[38%] left-[6%] flex items-center gap-2.5 !rounded-2xl px-4 py-3">
                 <FaSlidersH className="text-[var(--primary)]" />
                 <span className="space-y-1.5">
                   <span className="block h-1.5 w-20 rounded-full bg-[var(--surface-3)]">

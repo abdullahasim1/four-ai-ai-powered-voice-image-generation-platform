@@ -33,7 +33,7 @@ export default function ThemeToggle({ className = "" }) {
 
 /** Light / Dark / System segmented control for the Settings page. */
 export function ThemeSegmented() {
-  const [pref, setPref] = useState("system");
+  const [pref, setPref] = useState("light");
 
   useEffect(() => {
     setPref(getThemePref());
