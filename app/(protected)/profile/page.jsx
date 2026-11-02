@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { FaCamera, FaEdit, FaEnvelope, FaMapMarkerAlt, FaPhone, FaSave, FaUser } from "react-icons/fa";
 
-import PageShell, { PageHeader } from "@/components/PageShell";
+import { ToolHeader } from "@/components/PageShell";
 import { toast } from "@/lib/toast";
 import { accountApi } from "@/lib/api";
 import { getSession, updateUser } from "@/lib/auth-client";
@@ -45,8 +45,8 @@ export default function Profile() {
     setUser((u) => ({ ...u, ...session.user }));
     accountApi
       .getProfile()
-      .then(({ data }) => {
-        if (data.success) setUser(data.user);
+      .then((res) => {
+        if (res?.success) setUser(res.user);
       })
       .catch(() => toast.error("Couldn't load latest profile from server"));
   }, []);
@@ -95,17 +95,17 @@ export default function Profile() {
   };
 
   return (
-    <PageShell contentClassName="mx-auto max-w-2xl px-4 py-12">
-      <PageHeader icon={<FaUser className="gradient-text" />} title="My Profile" subtitle="Manage how you appear across Four AI." />
+    <div className="mx-auto max-w-6xl px-4 py-8 sm:px-6">
+      <ToolHeader icon={<FaUser />} title="Profile" subtitle="Manage how you appear across Four AI." />
 
-      <div className="glass-card p-6 md:p-8">
+      <div className="glass-card mx-auto max-w-2xl p-6 md:p-8">
         {/* Avatar */}
         <div className="flex flex-col items-center">
           <div className="relative">
             <img
               src={user.avatar || "/logo.png"}
               alt={user.name || "Profile"}
-              className={`h-28 w-28 rounded-full object-cover ring-4 ${isEditing ? "ring-fuchsia-400/40" : "ring-indigo-400/30"}`}
+              className={`h-28 w-28 rounded-full object-cover ring-4 ${isEditing ? "ring-fuchsia-500/40" : "ring-violet-500/30"}`}
             />
             {isEditing && (
               <button
@@ -143,12 +143,12 @@ export default function Profile() {
         {/* Fields */}
         <div className="mt-8 space-y-4">
           {[
-            { key: "name", label: "Full name", icon: <FaUser className="text-violet-300" />, placeholder: "Your name" },
-            { key: "email", label: "Email", icon: <FaEnvelope className="text-sky-300" />, placeholder: "you@example.com", readOnly: true },
-            { key: "phone", label: "Phone", icon: <FaPhone className="text-indigo-300" />, placeholder: "+92 300 0000000" },
-            { key: "address", label: "Address", icon: <FaMapMarkerAlt className="text-fuchsia-300" />, placeholder: "City, Country" },
+            { key: "name", label: "Full name", icon: <FaUser className="text-violet-500" />, placeholder: "Your name" },
+            { key: "email", label: "Email", icon: <FaEnvelope className="text-sky-500" />, placeholder: "you@example.com", readOnly: true },
+            { key: "phone", label: "Phone", icon: <FaPhone className="text-violet-500" />, placeholder: "+92 300 0000000" },
+            { key: "address", label: "Address", icon: <FaMapMarkerAlt className="text-fuchsia-500" />, placeholder: "City, Country" },
           ].map((field) => (
-            <div key={field.key} className="glass-card !rounded-xl flex items-center gap-3 p-3.5">
+            <div key={field.key} className="flex items-center gap-3 rounded-xl border border-line bg-[var(--input-bg)] p-3.5">
               <span>{field.icon}</span>
               <input
                 name={field.key}
@@ -156,16 +156,16 @@ export default function Profile() {
                 onChange={handleChange}
                 disabled={!isEditing || field.readOnly}
                 placeholder={field.placeholder}
-                className="w-full bg-transparent text-sm text-white placeholder-slate-500 outline-none disabled:text-slate-400"
+                className="w-full bg-transparent text-sm t-text outline-none placeholder:text-[var(--faint)] disabled:opacity-60"
               />
             </div>
           ))}
         </div>
 
-        <p className="mt-4 text-center text-xs text-slate-500">
+        <p className="mt-4 text-center text-xs t-faint">
           Email changes are handled in Settings for security.
         </p>
       </div>
-    </PageShell>
+    </div>
   );
 }

@@ -37,9 +37,9 @@ export default function LogoutPage() {
   return (
     <PageShell icons={<FloatingIcons icons={[<FaMagic key="1" />, <FaMicrophoneAlt key="2" />]} count={6} />} contentClassName="flex min-h-screen items-center justify-center px-4">
       <div className="text-center">
-        <span className="mx-auto mb-4 block h-10 w-10 animate-spin rounded-full border-2 border-indigo-400/30 border-t-indigo-400" />
-        <h2 className="font-display text-xl font-semibold text-white">Logging you out…</h2>
-        <p className="mt-2 text-sm text-slate-400">See you soon.</p>
+        <span className="mx-auto mb-4 block h-10 w-10 animate-spin rounded-full border-2 border-violet-500/30 border-t-violet-500" />
+        <h2 className="font-display text-xl font-semibold t-text">Logging you out…</h2>
+        <p className="mt-2 text-sm t-muted">See you soon.</p>
       </div>
     </PageShell>
   );

@@ -42,14 +42,14 @@ export default function ForgotPassword() {
         transition={{ type: "spring", stiffness: 220, damping: 20 }}
         className="glass-card w-full max-w-md p-8"
       >
-        <h1 className="text-center font-display text-2xl font-bold text-white">Reset your password</h1>
-        <p className="mt-2 text-center text-sm text-slate-400">
+        <h1 className="text-center font-display text-2xl font-bold t-text">Reset your password</h1>
+        <p className="mt-2 text-center text-sm t-muted">
           Enter your account email and we&apos;ll send you a secure reset link.
         </p>
 
         {done ? (
           <div className="mt-8 space-y-6 text-center">
-            <div className="rounded-xl border border-emerald-500/30 bg-emerald-500/10 px-4 py-3 text-sm text-emerald-300">
+            <div className="rounded-xl border border-emerald-500/30 bg-emerald-500/10 px-4 py-3 text-sm text-emerald-600 dark:text-emerald-300">
               If that email exists, a password reset link has been sent. It expires in 1 hour.
             </div>
             <Link href="/login" className="btn-primary w-full justify-center">
@@ -73,7 +73,7 @@ export default function ForgotPassword() {
             </div>
 
             {error && (
-              <p className="rounded-lg border border-rose-500/30 bg-rose-500/10 px-3 py-2 text-center text-sm text-rose-300">
+              <p className="rounded-lg border border-rose-500/30 bg-rose-500/10 px-3 py-2 text-center text-sm text-rose-600 dark:text-rose-300">
                 {error}
               </p>
             )}
@@ -82,9 +82,9 @@ export default function ForgotPassword() {
               {loading ? "Sending…" : "Send reset link"}
             </button>
 
-            <p className="text-center text-sm text-slate-400">
+            <p className="text-center text-sm t-muted">
               Remembered it?{" "}
-              <Link href="/login" className="font-medium text-indigo-300 hover:text-indigo-200">
+              <Link href="/login" className="font-medium text-[var(--primary)] hover:underline">
                 Log in
               </Link>
             </p>

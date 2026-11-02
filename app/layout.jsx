@@ -13,14 +13,23 @@ export const metadata = {
 };
 
 export const viewport = {
-  themeColor: "#070b16",
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#f3f1fe" },
+    { media: "(prefers-color-scheme: dark)", color: "#0c0a18" },
+  ],
   width: "device-width",
   initialScale: 1,
 };
 
+// Runs before first paint so the saved theme never flashes the wrong one.
+const THEME_INIT = `(function(){try{var t=localStorage.getItem("fourai-theme")||"system";var d=t==="dark"||(t==="system"&&window.matchMedia("(prefers-color-scheme: dark)").matches);if(d)document.documentElement.classList.add("dark");}catch(e){}})();`;
+
 export default function RootLayout({ children }) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: THEME_INIT }} />
+      </head>
       <body>
         <GsapAnimations />
         {children}

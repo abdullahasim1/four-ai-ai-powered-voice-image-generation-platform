@@ -68,12 +68,12 @@ export default function Features() {
       <div className="mt-14 grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3">
         {CORE.map((feature, i) => (
           <motion.div key={feature.title} {...fadeUp(i * 0.05)}>
-            <div className="glass-card group h-full p-6 transition-all hover:-translate-y-1 hover:border-indigo-400/25">
+            <div className="glass-card card-hover group h-full p-6">
               <span className={`inline-flex rounded-xl bg-gradient-to-br ${feature.gradient} p-3.5 text-white shadow-lg transition-transform group-hover:scale-110`}>
                 {feature.icon}
               </span>
-              <h3 className="mt-4 font-semibold text-white">{feature.title}</h3>
-              <p className="mt-1.5 text-sm leading-relaxed text-slate-400">{feature.text}</p>
+              <h3 className="mt-4 font-semibold t-text">{feature.title}</h3>
+              <p className="mt-1.5 text-sm leading-relaxed t-muted">{feature.text}</p>
             </div>
           </motion.div>
         ))}
@@ -81,13 +81,13 @@ export default function Features() {
 
       {/* Extras strip */}
       <motion.div {...fadeUp()} className="glass-card mt-14 p-8">
-        <h2 className="text-center font-display text-xl font-semibold text-white">And there&apos;s more</h2>
+        <h2 className="text-center font-display text-xl font-semibold t-text">And there&apos;s more</h2>
         <div className="mt-6 grid grid-cols-1 gap-x-10 gap-y-4 sm:grid-cols-2">
           {EXTRAS.map((extra) => (
             <div key={extra.title} className="flex items-start gap-3">
-              <span className="mt-1 h-2 w-2 shrink-0 rounded-full bg-gradient-to-br from-indigo-400 to-fuchsia-400" />
-              <p className="text-sm leading-relaxed text-slate-300">
-                <span className="font-semibold text-white">{extra.title}</span> — {extra.text}
+              <span className="mt-1 h-2 w-2 shrink-0 rounded-full bg-gradient-to-br from-violet-500 to-fuchsia-500" />
+              <p className="text-sm leading-relaxed t-muted">
+                <span className="font-semibold t-text">{extra.title}</span> — {extra.text}
               </p>
             </div>
           ))}

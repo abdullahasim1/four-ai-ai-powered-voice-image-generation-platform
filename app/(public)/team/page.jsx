@@ -76,24 +76,24 @@ export default function Team() {
       <div className="mt-14 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
         {TEAM.map((member, i) => (
           <motion.div key={member.name} {...fadeUp(i * 0.08)}>
-            <div className="glass-card group h-full overflow-hidden text-center transition-all hover:-translate-y-1.5 hover:border-indigo-400/30">
+            <div className="glass-card card-hover group h-full overflow-hidden text-center">
               {/* Photo */}
               <div className="relative mx-auto mt-8 h-28 w-28">
                 <img
                   src={member.img}
                   alt={member.name}
                   loading="lazy"
-                  className="h-full w-full rounded-full object-cover ring-4 ring-white/10 transition-all group-hover:ring-indigo-400/40"
+                  className="h-full w-full rounded-full object-cover ring-4 ring-[var(--primary-soft-border)] transition-all group-hover:ring-violet-500/50"
                 />
-                <span className="absolute inset-0 -z-10 rounded-full bg-gradient-to-br from-indigo-500 to-fuchsia-500 opacity-40 blur-lg" />
+                <span className="absolute inset-0 -z-10 rounded-full bg-gradient-to-br from-violet-500 to-fuchsia-500 opacity-40 blur-lg" />
               </div>
 
               <div className="p-5 pt-4">
-                <h3 className="font-semibold leading-snug text-white">{member.name}</h3>
-                <p className="mt-1 text-sm font-medium text-indigo-300">{member.role}</p>
-                <p className="mt-3 text-xs leading-relaxed text-slate-400">{member.description}</p>
+                <h3 className="font-semibold leading-snug t-text">{member.name}</h3>
+                <p className="mt-1 text-sm font-medium text-[var(--primary)]">{member.role}</p>
+                <p className="mt-3 text-xs leading-relaxed t-muted">{member.description}</p>
 
-                <div className="mt-5 flex justify-center gap-2.5 border-t border-white/5 pt-4">
+                <div className="mt-5 flex justify-center gap-2.5 border-t border-line pt-4">
                   {[
                     { key: "github", Icon: FaGithub },
                     { key: "linkedin", Icon: FaLinkedin },
@@ -107,7 +107,7 @@ export default function Team() {
                         target="_blank"
                         rel="noopener noreferrer"
                         aria-label={`${member.name} on ${key}`}
-                        className="rounded-lg border border-white/10 bg-white/5 p-2 text-slate-400 transition-all hover:-translate-y-0.5 hover:border-indigo-400/40 hover:text-indigo-300"
+                        className="rounded-lg border border-line bg-soft p-2 t-muted transition-all hover:-translate-y-0.5 hover:border-[var(--primary-soft-border)] hover:text-[var(--primary)]"
                       >
                         <Icon size={14} />
                       </a>

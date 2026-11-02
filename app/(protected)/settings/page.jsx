@@ -3,7 +3,8 @@
 import { Suspense, useEffect, useState } from "react";
 import { FaCheckCircle, FaCog, FaEnvelope, FaExclamationTriangle, FaKey, FaUser } from "react-icons/fa";
 
-import PageShell, { PageHeader } from "@/components/PageShell";
+import { ToolHeader } from "@/components/PageShell";
+import { ThemeSegmented } from "@/components/ThemeToggle";
 import { toast } from "@/lib/toast";
 import { accountApi } from "@/lib/api";
 import { getSession, updateUser } from "@/lib/auth-client";
@@ -63,9 +64,9 @@ function PasswordPanel() {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="glass-card space-y-4 p-6" data-reveal>
-      <h3 className="flex items-center gap-2 font-display text-lg font-semibold text-white">
-        <FaKey className="text-fuchsia-300" /> Change password
+    <form id="password" onSubmit={handleSubmit} className="glass-card scroll-mt-24 space-y-4 p-6" data-reveal>
+      <h3 className="flex items-center gap-2 font-display text-lg font-semibold t-text">
+        <FaKey className="text-[var(--primary)]" /> Change password
       </h3>
       <div>
         <label className="input-label">Current password</label>
@@ -188,15 +189,41 @@ function SettingsContent() {
   };
 
   return (
-    <PageShell contentClassName="mx-auto max-w-2xl px-4 py-12">
-      <PageHeader icon={<FaCog className="gradient-text" />} title="Account Settings" subtitle="Update your identity and keep your account secure." />
+    <div className="mx-auto max-w-6xl px-4 py-8 sm:px-6">
+      <ToolHeader icon={<FaCog />} title="Settings" subtitle="Manage your account information." />
+
+      <div className="grid items-start gap-6 lg:grid-cols-[240px_minmax(0,1fr)]">
+        {/* Section nav */}
+        <div className="glass-card hidden p-3 lg:block">
+          {[
+            { href: "#account", label: "Account", icon: <FaUser /> },
+            { href: "#email", label: "Change email", icon: <FaEnvelope /> },
+            { href: "#password", label: "Password", icon: <FaKey /> },
+            { href: "#appearance", label: "Appearance", icon: <FaCog /> },
+          ].map((item) => (
+            <a key={item.href} href={item.href} className="side-link">
+              {item.icon} {item.label}
+            </a>
+          ))}
+          <div className="mt-3 flex items-center gap-3 border-t border-line px-2 pb-1 pt-4">
+            <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-violet-600 to-fuchsia-500 font-display text-sm font-bold text-white">
+              {(user?.name || "U").trim().charAt(0).toUpperCase()}
+            </span>
+            <span className="min-w-0">
+              <span className="block truncate text-sm font-semibold t-text">{user?.name}</span>
+              <span className="block truncate text-xs t-muted">{user?.email}</span>
+            </span>
+          </div>
+        </div>
+
+        <div className="min-w-0">
 
       {changeState && (
         <div
           className={`mb-6 flex items-center gap-3 rounded-xl border px-4 py-3 text-sm ${
             changeState.tone === "ok"
-              ? "border-emerald-500/30 bg-emerald-500/10 text-emerald-300"
-              : "border-rose-500/30 bg-rose-500/10 text-rose-300"
+              ? "border-emerald-500/30 bg-emerald-500/10 text-emerald-600 dark:text-emerald-300"
+              : "border-rose-500/30 bg-rose-500/10 text-rose-600 dark:text-rose-300"
           }`}
         >
           {changeState.tone === "ok" ? (
@@ -210,9 +237,9 @@ function SettingsContent() {
 
       <div className="space-y-6">
         {/* Display name */}
-        <form onSubmit={handleNameSave} className="glass-card space-y-4 p-6" data-reveal>
-          <h3 className="flex items-center gap-2 font-display text-lg font-semibold text-white">
-            <FaUser className="text-indigo-300" /> Profile details
+        <form id="account" onSubmit={handleNameSave} className="glass-card scroll-mt-24 space-y-4 p-6" data-reveal>
+          <h3 className="flex items-center gap-2 font-display text-lg font-semibold t-text">
+            <FaUser className="text-[var(--primary)]" /> Profile details
           </h3>
           <div>
             <label className="input-label">Display name</label>
@@ -230,24 +257,24 @@ function SettingsContent() {
         </form>
 
         {/* Email change with verification */}
-        <form onSubmit={handleEmailChange} className="glass-card space-y-4 p-6" data-reveal>
-          <h3 className="flex items-center gap-2 font-display text-lg font-semibold text-white">
-            <FaEnvelope className="text-cyan-300" /> Change email
+        <form id="email" onSubmit={handleEmailChange} className="glass-card scroll-mt-24 space-y-4 p-6" data-reveal>
+          <h3 className="flex items-center gap-2 font-display text-lg font-semibold t-text">
+            <FaEnvelope className="text-[var(--primary)]" /> Change email
           </h3>
 
-          <p className="rounded-lg border border-white/10 bg-white/[0.03] px-3 py-2 text-xs leading-relaxed text-slate-400">
-            Current email: <span className="font-semibold text-white">{user?.email}</span>
+          <p className="rounded-lg border border-line bg-soft px-3 py-2 text-xs leading-relaxed t-muted">
+            Current email: <span className="font-semibold t-text">{user?.email}</span>
             {user?.pendingEmail && (
               <>
                 <br />
                 Pending confirmation for:{" "}
-                <span className="font-semibold text-amber-300">{user.pendingEmail}</span> — check that inbox.
+                <span className="font-semibold text-amber-600 dark:text-amber-300">{user.pendingEmail}</span> — check that inbox.
               </>
             )}
           </p>
 
           {requestedFor && (
-            <p className="flex items-center gap-2 rounded-lg border border-emerald-500/30 bg-emerald-500/10 px-3 py-2 text-xs text-emerald-300">
+            <p className="flex items-center gap-2 rounded-lg border border-emerald-500/30 bg-emerald-500/10 px-3 py-2 text-xs text-emerald-600 dark:text-emerald-300">
               <FaCheckCircle /> Confirmation link sent to <b>{requestedFor}</b>. Your email changes after you click it.
             </p>
           )}
@@ -282,8 +309,24 @@ function SettingsContent() {
         </form>
 
         <PasswordPanel />
+
+        {/* Appearance */}
+        <div id="appearance" className="glass-card scroll-mt-24 space-y-3 p-6" data-reveal>
+          <h3 className="flex items-center gap-2 font-display text-lg font-semibold t-text">
+            <FaCog className="text-[var(--primary)]" /> Appearance
+          </h3>
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <div>
+              <p className="text-sm font-medium t-text">Theme</p>
+              <p className="text-xs t-muted">Choose how Four AI looks on this device.</p>
+            </div>
+            <ThemeSegmented />
+          </div>
+        </div>
+        </div>
       </div>
-    </PageShell>
+    </div>
+    </div>
   );
 }
 
@@ -291,9 +334,9 @@ export default function Settings() {
   return (
     <Suspense
       fallback={
-        <PageShell contentClassName="flex min-h-screen items-center justify-center">
-          <span className="h-10 w-10 animate-spin rounded-full border-2 border-indigo-400/30 border-t-indigo-400" />
-        </PageShell>
+        <div className="flex min-h-[50vh] items-center justify-center">
+          <span className="h-10 w-10 animate-spin rounded-full border-2 border-violet-500/30 border-t-violet-500" />
+        </div>
       }
     >
       <SettingsContent />

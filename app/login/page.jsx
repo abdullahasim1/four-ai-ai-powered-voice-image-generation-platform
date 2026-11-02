@@ -34,7 +34,7 @@ function LoginForm() {
   // Already logged in? Never show the login form again
   useEffect(() => {
     if (isLoggedIn()) {
-      router.replace(isAdmin() ? "/admin/dashboard" : "/home");
+      router.replace(isAdmin() ? "/admin/dashboard" : "/dashboard");
       return;
     }
     setAuthChecked(true);
@@ -73,7 +73,7 @@ function LoginForm() {
         setSession(data.token, data.user);
         window.dispatchEvent(new Event("fourai:auth-changed"));
         toast.success(`Welcome back, ${data.user.name}!`);
-        router.push(data.user.role === "admin" ? "/admin/dashboard" : "/home");
+        router.push(data.user.role === "admin" ? "/admin/dashboard" : "/dashboard");
       } else {
         setError(data.message || "Login failed");
         setNeedsVerification(Boolean(data.needsVerification));
@@ -89,7 +89,7 @@ function LoginForm() {
   if (!authChecked) {
     return (
       <PageShell contentClassName="flex min-h-screen items-center justify-center">
-        <span className="h-10 w-10 animate-spin rounded-full border-2 border-indigo-400/30 border-t-indigo-400" />
+        <span className="h-10 w-10 animate-spin rounded-full border-2 border-violet-500/30 border-t-violet-500" />
       </PageShell>
     );
   }
@@ -106,8 +106,8 @@ function LoginForm() {
           <img src="/logo.png" alt="Four AI" className="h-10 w-auto rounded-lg" />
         </Link>
 
-        <h1 className="text-center font-display text-2xl font-bold text-white">Welcome back</h1>
-        <p className="mt-2 text-center text-sm text-slate-400">
+        <h1 className="text-center font-display text-2xl font-bold t-text">Welcome back</h1>
+        <p className="mt-2 text-center text-sm t-muted">
           Log in to continue creating with Four AI
         </p>
 
@@ -130,7 +130,7 @@ function LoginForm() {
           <div>
             <div className="flex items-center justify-between">
               <label className="input-label" htmlFor="login-password"><FaLock /> Password</label>
-              <Link href="/forgot-password" className="mb-[0.45rem] text-xs text-indigo-300 hover:text-indigo-200 hover:underline">
+              <Link href="/forgot-password" className="mb-[0.45rem] text-xs text-[var(--primary)] hover:underline hover:underline">
                 Forgot password?
               </Link>
             </div>
@@ -151,7 +151,7 @@ function LoginForm() {
             <motion.p
               initial={{ opacity: 0, y: -4 }}
               animate={{ opacity: 1, y: 0 }}
-              className="rounded-lg border border-emerald-500/30 bg-emerald-500/10 px-3 py-2 text-center text-sm text-emerald-300"
+              className="rounded-lg border border-emerald-500/30 bg-emerald-500/10 px-3 py-2 text-center text-sm text-emerald-600 dark:text-emerald-300"
             >
               {notice}
             </motion.p>
@@ -161,7 +161,7 @@ function LoginForm() {
             <motion.div
               initial={{ opacity: 0, y: -4 }}
               animate={{ opacity: 1, y: 0 }}
-              className="rounded-lg border border-rose-500/30 bg-rose-500/10 px-3 py-2 text-center text-sm text-rose-300"
+              className="rounded-lg border border-rose-500/30 bg-rose-500/10 px-3 py-2 text-center text-sm text-rose-600 dark:text-rose-300"
             >
               <p>{error}</p>
               {needsVerification && (
@@ -169,7 +169,7 @@ function LoginForm() {
                   type="button"
                   onClick={handleResend}
                   disabled={resending || !email}
-                  className="mt-2 font-semibold text-indigo-300 underline-offset-2 hover:text-indigo-200 hover:underline disabled:opacity-50"
+                  className="mt-2 font-semibold text-[var(--primary)] underline-offset-2 hover:underline disabled:opacity-50"
                 >
                   {resending ? "Sending…" : "Resend confirmation email"}
                 </button>
@@ -189,9 +189,9 @@ function LoginForm() {
           </button>
         </form>
 
-        <p className="mt-6 text-center text-sm text-slate-400">
+        <p className="mt-6 text-center text-sm t-muted">
           Don&apos;t have an account?{" "}
-          <Link href="/signup" className="font-medium text-indigo-300 hover:text-indigo-200">
+          <Link href="/signup" className="font-medium text-[var(--primary)] hover:underline">
             Create one free
           </Link>
         </p>
@@ -205,7 +205,7 @@ export default function Login() {
     <Suspense
       fallback={
         <PageShell contentClassName="flex min-h-screen items-center justify-center">
-          <span className="h-10 w-10 animate-spin rounded-full border-2 border-indigo-400/30 border-t-indigo-400" />
+          <span className="h-10 w-10 animate-spin rounded-full border-2 border-violet-500/30 border-t-violet-500" />
         </PageShell>
       }
     >

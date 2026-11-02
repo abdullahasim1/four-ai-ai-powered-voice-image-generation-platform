@@ -66,7 +66,7 @@ export default function Signup() {
   if (!authChecked) {
     return (
       <PageShell contentClassName="flex min-h-screen items-center justify-center">
-        <span className="h-10 w-10 animate-spin rounded-full border-2 border-indigo-400/30 border-t-indigo-400" />
+        <span className="h-10 w-10 animate-spin rounded-full border-2 border-violet-500/30 border-t-violet-500" />
       </PageShell>
     );
   }
@@ -81,13 +81,13 @@ export default function Signup() {
           className="glass-card w-full max-w-md p-8 text-center"
         >
           <FaCheckCircle className="mx-auto mb-4 text-5xl text-emerald-400" />
-          <h1 className="font-display text-2xl font-bold text-white">Confirm your email</h1>
-          <p className="mt-3 text-sm leading-relaxed text-slate-400">
+          <h1 className="font-display text-2xl font-bold t-text">Confirm your email</h1>
+          <p className="mt-3 text-sm leading-relaxed t-muted">
             We&apos;ve sent a confirmation link to
             <br />
-            <span className="font-semibold text-white">{pendingEmail}</span>
+            <span className="font-semibold t-text">{pendingEmail}</span>
           </p>
-          <p className="mt-2 text-sm text-slate-400">
+          <p className="mt-2 text-sm t-muted">
             Click the link in the email to activate your account, then log in.
           </p>
           <Link href="/login" className="btn-primary mt-6 inline-flex w-full items-center justify-center">
@@ -110,8 +110,8 @@ export default function Signup() {
           <img src="/logo.png" alt="Four AI" className="h-10 w-auto rounded-lg" />
         </Link>
 
-        <h1 className="text-center font-display text-2xl font-bold text-white">Create your account</h1>
-        <p className="mt-2 text-center text-sm text-slate-400">
+        <h1 className="text-center font-display text-2xl font-bold t-text">Create your account</h1>
+        <p className="mt-2 text-center text-sm t-muted">
           Free forever. Start generating in seconds.
         </p>
 
@@ -177,7 +177,7 @@ export default function Signup() {
             <motion.p
               initial={{ opacity: 0, y: -4 }}
               animate={{ opacity: 1, y: 0 }}
-              className="rounded-lg border border-rose-500/30 bg-rose-500/10 px-3 py-2 text-center text-sm text-rose-300"
+              className="rounded-lg border border-rose-500/30 bg-rose-500/10 px-3 py-2 text-center text-sm text-rose-600 dark:text-rose-300"
             >
               {error}
             </motion.p>
@@ -195,9 +195,9 @@ export default function Signup() {
           </button>
         </form>
 
-        <p className="mt-6 text-center text-sm text-slate-400">
+        <p className="mt-6 text-center text-sm t-muted">
           Already have an account?{" "}
-          <Link href="/login" className="font-medium text-indigo-300 hover:text-indigo-200">
+          <Link href="/login" className="font-medium text-[var(--primary)] hover:underline">
             Log in
           </Link>
         </p>

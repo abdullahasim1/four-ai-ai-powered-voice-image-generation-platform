@@ -1,10 +1,9 @@
 "use client";
 
 import { useRef, useState } from "react";
-import { FaDownload, FaMagic, FaMicrophoneAlt, FaMusic, FaVolumeUp, FaWaveSquare } from "react-icons/fa";
+import { FaCloudUploadAlt, FaDownload, FaMagic, FaWaveSquare } from "react-icons/fa";
 
-import PageShell, { PageHeader } from "@/components/PageShell";
-import FloatingIcons from "@/components/FloatingIcons";
+import { ToolHeader } from "@/components/PageShell";
 import { toast } from "@/lib/toast";
 import { encodeWAV } from "@/lib/wavEncoder";
 import { accountApi } from "@/lib/api";
@@ -184,84 +183,94 @@ export default function VoiceChanger() {
   };
 
   return (
-    <PageShell
-      icons={<FloatingIcons icons={[<FaMagic key="1" />, <FaWaveSquare key="2" />, <FaVolumeUp key="3" />, <FaMusic key="4" />]} count={8} />}
-      contentClassName="flex items-center justify-center px-4 py-12"
-    >
-      <div className="glass-card w-full max-w-lg p-8">
-        <PageHeader
-          icon={<FaWaveSquare className="gradient-text" />}
-          title="Voice Changer"
-          subtitle="Upload audio and apply studio-style effects. Everything is processed locally — no time limits."
-        />
+    <div className="mx-auto max-w-6xl px-4 py-8 sm:px-6">
+      <ToolHeader
+        icon={<FaWaveSquare />}
+        title="Voice Changer"
+        subtitle="Transform your voice with AI-powered effects."
+      />
 
-        {/* File picker */}
-        <label className="group flex cursor-pointer flex-col items-center justify-center gap-2 rounded-xl border-2 border-dashed border-white/15 bg-black/20 px-6 py-8 text-center transition-colors hover:border-indigo-400/50">
-          <span className="rounded-full bg-gradient-to-br from-indigo-500/30 to-fuchsia-500/30 p-3 text-indigo-200 transition-transform group-hover:scale-110">
-            <FaMicrophoneAlt className="text-xl" />
-          </span>
-          <span className="text-sm font-medium text-slate-200">
-            {file ? file.name : "Click to upload an audio file"}
-          </span>
-          <span className="text-xs text-slate-500">MP3, WAV, OGG and more</span>
-          <input type="file" accept="audio/*" onChange={handleFileChange} className="hidden" />
-        </label>
+      <div className="mx-auto max-w-2xl">
+        <div className="glass-card p-6 md:p-8">
+          {/* File picker */}
+          <label className="group flex cursor-pointer flex-col items-center justify-center gap-2 rounded-2xl border-2 border-dashed border-[var(--border-strong)] bg-soft px-6 py-10 text-center transition-colors hover:border-[var(--primary)]">
+            <span className="flex h-14 w-14 items-center justify-center rounded-full bg-gradient-to-br from-violet-600 to-fuchsia-500 text-xl text-white shadow-lg shadow-violet-500/30 transition-transform group-hover:scale-110">
+              <FaCloudUploadAlt />
+            </span>
+            <span className="mt-1 text-sm font-semibold t-text">
+              {file ? file.name : "Upload Audio File"}
+            </span>
+            <span className="text-xs t-muted">Drag & drop or click to upload</span>
+            <span className="text-xs t-faint">MP3, WAV, M4A · Max size 50 MB</span>
+            <input type="file" accept="audio/*" onChange={handleFileChange} className="hidden" />
+          </label>
 
-        {fileDuration != null && (
-          <p className="mt-3 rounded-lg border border-emerald-500/25 bg-emerald-500/10 px-3 py-2 text-center text-sm text-emerald-300">
-            Duration: {Math.floor(fileDuration / 60)}:{(fileDuration % 60).toFixed(1).padStart(4, "0")}
-          </p>
-        )}
-
-        {/* Effect */}
-        <div className="mt-6">
-          <label className="input-label"><FaMagic /> Effect</label>
-          <select
-            value={effect}
-            onChange={(e) => setEffect(e.target.value)}
-            className="input-field"
-          >
-            {EFFECTS.map((e) => (
-              <option key={e.value} value={e.value} className="bg-slate-900">{e.label}</option>
-            ))}
-          </select>
-        </div>
-
-        {/* Speed */}
-        <div className="mt-5">
-          <label className="input-label">Playback speed · {customSpeed.toFixed(2)}x</label>
-          <input
-            type="range"
-            min="0.5"
-            max="2"
-            step="0.01"
-            value={customSpeed}
-            onChange={(e) => setCustomSpeed(parseFloat(e.target.value))}
-            className="w-full accent-indigo-500"
-          />
-        </div>
-
-        <button onClick={handleApplyEffect} disabled={processing} className="btn-primary mt-7 w-full">
-          {processing ? (
-            <>
-              <span className="h-4 w-4 animate-spin rounded-full border-2 border-white/30 border-t-white" />
-              Processing…
-            </>
-          ) : (
-            "Apply effect"
+          {fileDuration != null && (
+            <p className="mt-3 rounded-lg border border-emerald-500/30 bg-emerald-500/10 px-3 py-2 text-center text-sm text-emerald-600 dark:text-emerald-300">
+              Duration: {Math.floor(fileDuration / 60)}:{(fileDuration % 60).toFixed(1).padStart(4, "0")}
+            </p>
           )}
-        </button>
 
-        {/* Result */}
-        {audioUrl && (
-          <div className="mt-7 border-t border-white/5 pt-6">
-            <audio controls src={audioUrl} className="w-full" />
-            <a href={audioUrl} download="fourai-processed.wav" className="btn-secondary mt-4 w-full justify-center">
-              <FaDownload /> Download WAV
-            </a>
+          <div className="mt-6 grid gap-5 sm:grid-cols-2">
+            {/* Effect */}
+            <div>
+              <label className="input-label"><FaMagic /> Change To</label>
+              <select
+                value={effect}
+                onChange={(e) => setEffect(e.target.value)}
+                className="input-field"
+              >
+                {EFFECTS.map((e) => (
+                  <option key={e.value} value={e.value}>{e.label}</option>
+                ))}
+              </select>
+            </div>
+
+            {/* Speed */}
+            <div>
+              <label className="input-label">
+                Playback speed <span className="ml-auto font-semibold t-text">{customSpeed.toFixed(2)}x</span>
+              </label>
+              <input
+                type="range"
+                min="0.5"
+                max="2"
+                step="0.01"
+                value={customSpeed}
+                onChange={(e) => setCustomSpeed(parseFloat(e.target.value))}
+                className="mt-3 w-full"
+              />
+            </div>
           </div>
-        )}
+
+          <button onClick={handleApplyEffect} disabled={processing} className="btn-primary mt-7 w-full justify-center !py-3">
+            {processing ? (
+              <>
+                <span className="h-4 w-4 animate-spin rounded-full border-2 border-white/30 border-t-white" />
+                Processing…
+              </>
+            ) : (
+              <>
+                Change Voice <FaMagic className="text-xs" />
+              </>
+            )}
+          </button>
+
+          {/* Result */}
+          {audioUrl && (
+            <div className="mt-7 border-t border-line pt-6">
+              <audio controls src={audioUrl} className="w-full" />
+              <a href={audioUrl} download="fourai-processed.wav" className="btn-secondary mt-4 w-full justify-center">
+                <FaDownload /> Download WAV
+              </a>
+            </div>
+          )}
+
+          <p className="mt-5 text-center text-xs t-faint">
+            Everything is processed locally in your browser — no time limits, nothing is uploaded.
+          </p>
+        </div>
       </div>
-    </PageShell>
+    </div>
   );
 }

@@ -96,7 +96,7 @@ export default function AdminDashboard() {
   if (!authed) {
     return (
       <PageShell contentClassName="flex min-h-screen items-center justify-center">
-        <span className="h-10 w-10 animate-spin rounded-full border-2 border-indigo-400/30 border-t-indigo-400" />
+        <span className="h-10 w-10 animate-spin rounded-full border-2 border-violet-500/30 border-t-violet-500" />
       </PageShell>
     );
   }
@@ -144,7 +144,7 @@ export default function AdminDashboard() {
           }}
           className="relative flex-1"
         >
-          <FaSearch className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500" />
+          <FaSearch className="absolute left-4 top-1/2 -translate-y-1/2 t-faint" />
           <input
             value={search}
             onChange={(e) => setSearch(e.target.value)}
@@ -160,16 +160,16 @@ export default function AdminDashboard() {
       {/* Stats */}
       <div data-reveal-group className="mb-6 grid grid-cols-3 gap-3 text-center">
         <div className="glass-card p-4">
-          <AnimatedNumber value={users.length} className="text-2xl font-bold text-white" />
-          <p className="mt-1 flex items-center justify-center gap-1.5 text-xs text-slate-400"><FaUsers /> Total</p>
+          <AnimatedNumber value={users.length} className="text-2xl font-bold t-text" />
+          <p className="mt-1 flex items-center justify-center gap-1.5 text-xs t-muted"><FaUsers /> Total</p>
         </div>
         <div className="glass-card p-4">
-          <AnimatedNumber value={users.filter((u) => !u.banned).length} className="text-2xl font-bold text-emerald-300" />
-          <p className="mt-1 text-xs text-slate-400">Active</p>
+          <AnimatedNumber value={users.filter((u) => !u.banned).length} className="text-2xl font-bold text-emerald-600 dark:text-emerald-300" />
+          <p className="mt-1 text-xs t-muted">Active</p>
         </div>
         <div className="glass-card p-4">
-          <AnimatedNumber value={users.filter((u) => u.banned).length} className="text-2xl font-bold text-rose-300" />
-          <p className="mt-1 text-xs text-slate-400">Banned</p>
+          <AnimatedNumber value={users.filter((u) => u.banned).length} className="text-2xl font-bold text-rose-600 dark:text-rose-300" />
+          <p className="mt-1 text-xs t-muted">Banned</p>
         </div>
       </div>
 
@@ -182,8 +182,8 @@ export default function AdminDashboard() {
         </div>
       ) : users.length === 0 ? (
         <div className="glass-card p-10 text-center">
-          <FaUsers className="mx-auto mb-3 text-4xl text-indigo-400/40" />
-          <p className="text-sm text-slate-400">No users match your search.</p>
+          <FaUsers className="mx-auto mb-3 text-4xl text-[var(--primary)] opacity-40" />
+          <p className="text-sm t-muted">No users match your search.</p>
         </div>
       ) : (
         <div className="space-y-3">
@@ -196,19 +196,19 @@ export default function AdminDashboard() {
             >
               <div className="min-w-0">
                 <div className="flex items-center gap-2">
-                  <h3 className="truncate font-semibold text-white">{user.name}</h3>
+                  <h3 className="truncate font-semibold t-text">{user.name}</h3>
                   <span
                     className={`rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide ${
                       user.banned
-                        ? "bg-rose-500/20 text-rose-300"
-                        : "bg-emerald-500/20 text-emerald-300"
+                        ? "bg-rose-500/20 text-rose-600 dark:text-rose-300"
+                        : "bg-emerald-500/20 text-emerald-600 dark:text-emerald-300"
                     }`}
                   >
                     {user.banned ? "Banned" : "Active"}
                   </span>
                 </div>
-                <p className="mt-0.5 truncate text-sm text-slate-400">{user.email}</p>
-                <p className="mt-1 text-xs text-slate-500">
+                <p className="mt-0.5 truncate text-sm t-muted">{user.email}</p>
+                <p className="mt-1 text-xs t-faint">
                   Joined {formatDate(user.createdAt)} · {user.activityCount} activities
                 </p>
               </div>
@@ -218,8 +218,8 @@ export default function AdminDashboard() {
                 disabled={busyId === user.id}
                 className={`shrink-0 rounded-lg px-4 py-2 text-sm font-semibold transition-all ${
                   user.banned
-                    ? "bg-emerald-500/20 text-emerald-300 hover:bg-emerald-500/30"
-                    : "bg-rose-500/20 text-rose-300 hover:bg-rose-500/30"
+                    ? "bg-emerald-500/20 text-emerald-600 dark:text-emerald-300 hover:bg-emerald-500/30"
+                    : "bg-rose-500/20 text-rose-600 dark:text-rose-300 hover:bg-rose-500/30"
                 } disabled:opacity-50`}
               >
                 {busyId === user.id ? (
