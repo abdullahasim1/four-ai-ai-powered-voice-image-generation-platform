@@ -67,7 +67,11 @@ html {
 
 html,
 body {
+  /* `clip` (not `hidden`) prevents sideways spill WITHOUT turning
+     html/body into separate scroll containers — overflow-x:hidden on
+     both produced a double scrollbar and stuck scrolling in Chrome. */
   overflow-x: hidden;
+  overflow-x: clip;
 }
 
 body {
